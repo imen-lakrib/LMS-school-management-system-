@@ -1,7 +1,7 @@
 //oop class for handling errors
 
 //extends its like giving a name
-//constructor are arguments
+//constructor are parameters or values
 class ErrorHandler extends Error {
   statusCode: Number;
   constructor(message: any, statusCode: Number) {
@@ -12,4 +12,4 @@ class ErrorHandler extends Error {
   }
 }
 
-module.exports = ErrorHandler;
+export default ErrorHandler;
