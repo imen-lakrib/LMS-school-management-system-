@@ -79,14 +79,18 @@ userSchema.pre<IUser>("save", async function (next) {
 
 //sign access token
 userSchema.methods.SignAccessToken = function () {
-  return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN || "");
+  return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN || "", {
+    expiresIn: "5m",
+  });
 };
 
-//WHEN LOGIN SERVER CHECK IF CREADINTIALS ARE CORRECT THEN IT SEND TO BROWSER COOKIES 
+//WHEN LOGIN SERVER CHECK IF CREADINTIALS ARE CORRECT THEN IT SEND TO BROWSER COOKIES
 // THESE COOKIES INCLUDES ACCESS ANS REFRESH TOKEN
 //sign refresh token
 userSchema.methods.SignRefreshToken = function () {
-  return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN || "");
+  return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN || "", {
+    expiresIn: "3d",
+  });
 };
 
 //compare password

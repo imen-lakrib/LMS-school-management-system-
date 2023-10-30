@@ -4,11 +4,15 @@ import express, { NextFunction, Request, Response } from "express";
 import userModel, { IUser } from "../models/user.model";
 import ErrorHandler from "../utils/ErrorHandler";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import ejs from "ejs";
 import path from "path";
 import sendEmail from "../utils/sendMail";
-import { sendToken } from "../utils/jwt";
+import {
+  accessTokenOptions,
+  refreshTokenOptions,
+  sendToken,
+} from "../utils/jwt";
 import { redis } from "../utils/redis";
 //register user:
 
@@ -152,7 +156,6 @@ export const loginUser = CatchAsyncError(
         return next(new ErrorHandler("Invalid email or password", 400));
       }
 
-
       const isPasswordMatch = await user.comparePassword(password);
 
       if (!isPasswordMatch) {
@@ -179,6 +182,58 @@ export const logoutUser = CatchAsyncError(
       res.status(200).json({
         success: true,
         message: "Logged out successfully",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// our access token expired after 5m so we need to update it
+export const updateAccessToken = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const refresh_token = req.cookies.refresh_token as string;
+      // verify that the refresh token is valid
+      const decoded = jwt.verify(
+        refresh_token,
+        process.env.REFRESH_TOKEN as string
+      ) as JwtPayload;
+
+      const message = "Could not refresh token";
+
+      if (!decoded) {
+        return next(new ErrorHandler(message, 400));
+      }
+
+      //check session
+      const session = await redis.get(decoded.id as string);
+
+      if (!session) {
+        return next(new ErrorHandler(message, 400));
+      }
+
+      const user = JSON.parse(session);
+      //create a new token
+      const accessToken = jwt.sign(
+        { id: user._id },
+        process.env.ACCESS_TOKEN as string,
+        { expiresIn: "5m" }
+      );
+
+      const refreshToken = jwt.sign(
+        { id: user._id },
+        process.env.REFRESH_TOKEN as string,
+        { expiresIn: "3d" }
+      );
+
+      // update cookies with new token
+      res.cookie("access_token", accessToken, accessTokenOptions);
+      res.cookie("refresh_token", refreshToken, refreshTokenOptions);
+
+      res.status(200).json({
+        status: "success",
+        accessToken,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
