@@ -15,6 +15,7 @@ import {
 } from "../utils/jwt";
 import { redis } from "../utils/redis";
 import { getUserById } from "../services/user.service";
+import cloudinary from "cloudinary";
 //register user:
 
 interface IRegistrationBody {
@@ -318,7 +319,7 @@ export const updateMyAccount = CatchAsyncError(
   }
 );
 
-//update user info
+//update user password
 interface IUpdatePassword {
   oldPassword: string;
   newPassword: string;
@@ -347,6 +348,56 @@ export const updatePassword = CatchAsyncError(
       await user.save();
       // update redis
       await redis.set(req.user?._id, JSON.stringify(user));
+
+      res.status(201).json({
+        success: true,
+        user,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// update profile picture
+interface IUpdateUserPicture {
+  avatar: string;
+}
+export const updateMyPicture = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { avatar } = req.body as IUpdateUserPicture;
+      const userId = req?.user?._id;
+      const user = await userModel.findById(userId);
+
+      if (avatar && user) {
+        if (user?.avatar?.public_id) {
+          // he has already had a profile picture so first we delete it then upload the new one
+          await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
+
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+            folder: "avatars",
+            width: 150,
+          });
+          user.avatar = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+          };
+        } else {
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+            folder: "avatars",
+            width: 150,
+          });
+          user.avatar = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+          };
+        }
+      }
+
+      await user?.save();
+      // update the cash
+      await redis.set(userId, JSON.stringify(user));
 
       res.status(201).json({
         success: true,
