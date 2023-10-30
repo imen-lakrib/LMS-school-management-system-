@@ -7,7 +7,8 @@ import {
   updateAccessToken,
   getUserInfo,
   socialAuth,
-  updateMyAccount
+  updateMyAccount,
+  updatePassword,
 } from "../controllers/user.controller";
 import { isAuthenticated, authorizeRoles } from "../middleware/auth";
 
@@ -20,7 +21,8 @@ useRouter.get("/logout", isAuthenticated, logoutUser);
 useRouter.get("/refreshtoken", updateAccessToken);
 useRouter.get("/me", isAuthenticated, getUserInfo);
 useRouter.post("/socialauth", socialAuth);
-useRouter.post("/update-my-account",isAuthenticated, updateMyAccount);
+useRouter.post("/update-my-account", isAuthenticated, updateMyAccount);
+useRouter.put("/update-password", isAuthenticated, updatePassword);
 
 //Course
 
