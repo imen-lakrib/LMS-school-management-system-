@@ -17,15 +17,13 @@ const useRouter = express.Router();
 //Auth
 useRouter.post("/registration", registrationUser);
 useRouter.post("/activate-user", activateUser);
-useRouter.post("/login", loginUser);
-useRouter.get("/logout", isAuthenticated, logoutUser);
 useRouter.get("/refreshtoken", updateAccessToken);
-useRouter.get("/me", isAuthenticated, getUserInfo);
+useRouter.post("/login", loginUser);
 useRouter.post("/socialauth", socialAuth);
+
+useRouter.get("/me", isAuthenticated, getUserInfo);
 useRouter.post("/update-my-account", isAuthenticated, updateMyAccount);
 useRouter.put("/update-password", isAuthenticated, updatePassword);
 useRouter.put("/update-picture", isAuthenticated, updateMyPicture);
-
-//Course
-
+useRouter.get("/logout", isAuthenticated, logoutUser);
 export default useRouter;
