@@ -381,3 +381,54 @@ export const addReview = CatchAsyncError(
     }
   }
 );
+
+// add reply to a review : -- only admin can reply to a review
+interface IAddReplayToReviewData {
+  comment: string;
+  courseId: string;
+  reviewId: string;
+}
+
+export const addReplayToReview = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { comment, courseId, reviewId }: IAddReplayToReviewData = req.body;
+
+      const course = await CourseModel.findById(courseId);
+      if (!course) {
+        return next(new ErrorHandler("Course not found", 400));
+      }
+
+      const review = course?.reviews?.find((rev: any) =>
+        rev._id.equals(reviewId)
+      );
+
+      if (!review) {
+        return next(new ErrorHandler("Invalid review id", 400));
+      }
+
+      // create a new replay object:
+      const replayData: any = {
+        user: req.user,
+        comment,
+      };
+
+      //add this replay to our review replies
+
+      if (!review.commentReplies) {
+        review.commentReplies = [];
+      }
+      review.commentReplies?.push(replayData);
+
+      //save the updated course:
+      await course?.save();
+
+      res.status(200).json({
+        success: true,
+        course,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
