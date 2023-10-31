@@ -177,7 +177,7 @@ export const logoutUser = CatchAsyncError(
       res.cookie("access_token", "", { maxAge: 1 });
       res.cookie("refresh_token", "", { maxAge: 1 });
 
-      // delete user session from redis cash after logout
+      // delete user session from redis cache after logout
       const userId = req.user?._id || "";
       redis.del(userId);
 
@@ -306,7 +306,7 @@ export const updateMyAccount = CatchAsyncError(
       }
 
       await user?.save();
-      // update the cash
+      // update the cache
       await redis.set(userId, JSON.stringify(user));
 
       res.status(201).json({
@@ -396,7 +396,7 @@ export const updateMyPicture = CatchAsyncError(
       }
 
       await user?.save();
-      // update the cash
+      // update the cache
       await redis.set(userId, JSON.stringify(user));
 
       res.status(201).json({

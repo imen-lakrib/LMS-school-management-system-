@@ -26,7 +26,7 @@ export const isAuthenticated = CatchAsyncError(
       return new ErrorHandler("Access token is not valid", 400);
     }
 
-    //search the user in redis cuz we stored our data in redis cash
+    //search the user in redis cuz we stored our data in redis cache
     const user = await redis.get(decoded.id);
 
     if (!user) {
