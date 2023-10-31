@@ -3,6 +3,7 @@ import express from "express";
 import { isAuthenticated, authorizeRoles } from "../middleware/auth";
 import {
   editCourse,
+  getAllCourses,
   getSingleCourse,
   uploadCourse,
 } from "../controllers/course.controller";
@@ -22,6 +23,7 @@ courseRouter.put(
   editCourse
 );
 
+courseRouter.get("/all-courses", getAllCourses);
 courseRouter.get("/single-course/:id", getSingleCourse);
 
 export default courseRouter;
