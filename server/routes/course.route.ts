@@ -2,6 +2,7 @@ import express from "express";
 
 import { isAuthenticated, authorizeRoles } from "../middleware/auth";
 import {
+  addAnswer,
   addQuestion,
   editCourse,
   getAllCourses,
@@ -29,5 +30,6 @@ courseRouter.get("/all-courses", getAllCourses);
 courseRouter.get("/single-course/:id", getSingleCourse);
 courseRouter.get("/get-course-content/:id", isAuthenticated, getCourseByUser);
 courseRouter.put("/add-question", isAuthenticated, addQuestion);
+courseRouter.put("/add-answer", isAuthenticated, addAnswer);
 
 export default courseRouter;

@@ -230,3 +230,87 @@ export const addQuestion = CatchAsyncError(
     }
   }
 );
+
+// add answer to course questions:
+interface IAddAnswerData {
+  answer: string;
+  courseId: string;
+  contentId: string;
+  questionId: string;
+}
+
+export const addAnswer = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { answer, courseId, contentId, questionId }: IAddAnswerData =
+        req.body;
+
+      const course = await CourseModel.findById(courseId);
+      if (!mongoose.Types.ObjectId.isValid(contentId)) {
+        return next(new ErrorHandler("Invalid content id", 400));
+      }
+
+      const courseContent = course?.courseData?.find((item: any) =>
+        item._id.equals(contentId)
+      );
+
+      if (!courseContent) {
+        return next(new ErrorHandler("Invalid content id", 400));
+      }
+
+      const question = courseContent?.questions?.find((item: any) =>
+        item._id.equals(questionId)
+      );
+      //ps: find method return an object...
+
+      if (!question) {
+        return next(new ErrorHandler("Invalid question id", 400));
+      }
+
+      // create a new answer object:
+      const newAnswer: any = {
+        user: req.user,
+        answer,
+      };
+
+      //add this answer to our question replies
+      question.questionReplies?.push(newAnswer);
+
+      //save the updated course:
+      await course?.save();
+
+      // manage notification
+      if (req.user?._id === question.user._id) {
+        // push notification to the admin >> a new question added to this course!
+      } else {
+        // send email >> new answer added to your question!
+        const data = {
+          name: question.user.name,
+          title: courseContent.title,
+        };
+
+        const html = await ejs.renderFile(
+          path.join(__dirname, "../mails/question-reply.ejs"),
+          data
+        );
+
+        try {
+          await sendEmail({
+            email: question.user.email,
+            subject: "Question Reply",
+            template: "question-reply.ejs",
+            data,
+          });
+        } catch (error: any) {
+          return next(new ErrorHandler(error.message, 400));
+        }
+      }
+      res.status(200).json({
+        success: true,
+        course,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
