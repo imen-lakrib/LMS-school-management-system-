@@ -282,6 +282,7 @@ export const addAnswer = CatchAsyncError(
       // manage notification
       if (req.user?._id === question.user._id) {
         // push notification to the admin >> a new question added to this course!
+        // todo: create notification
       } else {
         // send email >> new answer added to your question!
         const data = {
@@ -305,6 +306,72 @@ export const addAnswer = CatchAsyncError(
           return next(new ErrorHandler(error.message, 400));
         }
       }
+      res.status(200).json({
+        success: true,
+        course,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//add review in course
+interface IAddReviewData {
+  review: string;
+  rating: number;
+  userId: string;
+}
+
+export const addReview = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //get loggedin user courses list
+      const userCourseList = req.user?.courses;
+      const courseId = req.params.id;
+
+      // check if the courseId exists in userCourseList
+      const isCourseExists = userCourseList?.some(
+        (course: any) => course._id.toString() === courseId.toString()
+      );
+
+      if (!isCourseExists) {
+        return next(
+          new ErrorHandler("You are not aligible to access this course!", 500)
+        );
+      }
+
+      const course = await CourseModel.findById(courseId);
+
+      // create object for review:
+      const { review, rating }: IAddReviewData = req.body;
+
+      const reviewData: any = {
+        user: req.user,
+        comment: review,
+        rating,
+      };
+
+      course?.reviews.push(reviewData);
+
+      let avg = 0;
+      course?.reviews.forEach((rev: any) => {
+        avg += rev.rating;
+      });
+      if (course) {
+        course.ratings = avg / course.reviews.length;
+      }
+
+      await course?.save();
+
+      // manage notifications
+
+      const notification = {
+        title: "New Review Received",
+        message: `${req.user?.name} has given a review in ${course?.name}`,
+      };
+      // todo: create notification
+
       res.status(200).json({
         success: true,
         course,
