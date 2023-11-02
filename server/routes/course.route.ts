@@ -9,6 +9,7 @@ import {
   editCourse,
   getAllCourses,
   getCourseByUser,
+  getCourses,
   getSingleCourse,
   uploadCourse,
 } from "../controllers/course.controller";
@@ -39,6 +40,13 @@ courseRouter.put(
   isAuthenticated,
   authorizeRoles("admin"),
   addReplayToReview
+);
+
+courseRouter.get(
+  "/all-courses-admin",
+  isAuthenticated,
+  authorizeRoles("admin"),
+  getCourses
 );
 
 export default courseRouter;

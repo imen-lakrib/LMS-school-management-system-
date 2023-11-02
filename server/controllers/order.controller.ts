@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 
 import ErrorHandler from "../utils/ErrorHandler";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
-import  { IOrder } from "../models/order.model";
+import { IOrder } from "../models/order.model";
 import userModel from "../models/user.model";
 import CourseModel from "../models/course.model";
 import NotificationModel from "../models/notification.model";
@@ -12,7 +12,7 @@ import NotificationModel from "../models/notification.model";
 import ejs from "ejs";
 import path from "path";
 import sendEmail from "../utils/sendMail";
-import { newOrder } from "../services/order.service";
+import { getAllOrders, newOrder } from "../services/order.service";
 
 // create order:
 export const createOrder = CatchAsyncError(
@@ -100,6 +100,17 @@ export const createOrder = CatchAsyncError(
       newOrder(data, res, next);
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//get all orders
+export const getOrders = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllOrders(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
     }
   }
 );

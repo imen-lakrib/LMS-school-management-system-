@@ -10,6 +10,7 @@ import {
   updateMyAccount,
   updatePassword,
   updateMyPicture,
+  getUsers,
 } from "../controllers/user.controller";
 import { isAuthenticated, authorizeRoles } from "../middleware/auth";
 
@@ -26,4 +27,11 @@ useRouter.post("/update-my-account", isAuthenticated, updateMyAccount);
 useRouter.put("/update-password", isAuthenticated, updatePassword);
 useRouter.put("/update-picture", isAuthenticated, updateMyPicture);
 useRouter.get("/logout", isAuthenticated, logoutUser);
+
+useRouter.get(
+  "/all-users-admin",
+  isAuthenticated,
+  authorizeRoles("admin"),
+  getUsers
+);
 export default useRouter;

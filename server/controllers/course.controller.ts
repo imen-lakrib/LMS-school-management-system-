@@ -12,7 +12,7 @@ import path from "path";
 import sendEmail from "../utils/sendMail";
 
 import { redis } from "../utils/redis";
-import { createCourse } from "../services/course.service";
+import { createCourse, getAllCoursesService } from "../services/course.service";
 import mongoose from "mongoose";
 import NotificationModel from "../models/notification.model";
 
@@ -436,6 +436,17 @@ export const addReplayToReview = CatchAsyncError(
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//get all courses
+export const getCourses = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllCoursesService(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
     }
   }
 );
