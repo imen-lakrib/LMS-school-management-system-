@@ -1,0 +1,128 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital, wght@0,100;0, 200; 0,300;0,400;0,500;0,600; 0,700;0,800; 1,100; 1,200; 1,3 rel="
+        stylesheet">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            height: 100vh;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #4f5ef1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #ffffff;
+        }
+
+        .message {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-top: 50px;
+        }
+
+        .message-sm {
+            text-align: center;
+
+            .course-name {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .purchase-info {
+                font-size 16px;
+            }
+
+            .total {
+                font-size: 18px;
+                text-align: right;
+                margin-top: 20px;
+            }
+
+            .footer {
+                text-align: center;
+                margin-top: 100px;
+                color: #fff;
+            }
+
+            .footer>p>a {
+                text-decoration: none;
+                display: inline-block;
+                color: #fff;
+            }
+
+            .flex {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid #9999993f;
+            }
+
+            .flex h4 {
+                font-weight: 400;
+                margin-bottom: 5px;
+            }
+
+            I .flex.lg {
+                width: 85%;
+                margin: auto;
+                border-bottom: none;
+            }
+
+            .first-td {
+                text-transform: uppercase;
+                color: #0000006c;
+                font-size: 16px;
+                padding: 5px 0px;
+                width: 1%;
+            }
+
+            .first-td {
+                font-weight: 600 !important;
+            }
+
+            .second-td {
+                font-weight: 500 !important;
+                color: #000000af;
+                font-size: 15px;
+            } -->
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>New Order</title>
+</head>
+
+<body>
+    <h1>You Have a New Order</h1>
+    <p>Thank you for your order. We have received your request and will process it shortly.</p>
+    <p>Order Details:</p>
+    <ul>
+        <li>Order ID: <%= order._id %>
+        </li>
+        <li>Product: <%= order.date %>
+        </li>
+        <li>Quantity: <%= order.name %>
+        </li>
+        <li>Total Amount: <%= order.price %>
+        </li>
+    </ul>
+    <p>We appreciate your business and will keep you updated on the order status.</p>
+    <p>Thank you!</p>
+</body>
+
+</html>

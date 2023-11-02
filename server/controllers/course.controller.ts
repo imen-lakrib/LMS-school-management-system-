@@ -1,21 +1,16 @@
 require("dotenv").config();
 
-import express, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import CourseModel, { ICourse } from "../models/course.model";
 
 import ErrorHandler from "../utils/ErrorHandler";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import cloudinary from "cloudinary";
 
-import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import ejs from "ejs";
 import path from "path";
 import sendEmail from "../utils/sendMail";
-import {
-  accessTokenOptions,
-  refreshTokenOptions,
-  sendToken,
-} from "../utils/jwt";
+
 import { redis } from "../utils/redis";
 import { createCourse } from "../services/course.service";
 import mongoose from "mongoose";
