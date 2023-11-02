@@ -450,3 +450,31 @@ export const getCourses = CatchAsyncError(
     }
   }
 );
+
+// delete course:
+export const deleteCoure = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const course = await CourseModel.findById(id);
+      if (!course) {
+        return next(new ErrorHandler("This course not exists", 404));
+      }
+
+      await course.deleteOne({ id });
+
+      //delete it from redis
+      await redis.del(id);
+
+      // delete images from cloudinary
+      // todo
+
+      res.status(201).json({
+        success: true,
+        message: "cCurse deleted successfully",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);

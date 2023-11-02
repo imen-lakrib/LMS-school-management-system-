@@ -436,3 +436,28 @@ export const updateUserRole = CatchAsyncError(
     }
   }
 );
+
+// delete user:
+export const deleteUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const user = await userModel.findById(id);
+      if (!user) {
+        return next(new ErrorHandler("This user not exists", 404));
+      }
+
+      await user.deleteOne({ id });
+
+      //delete it from redis
+      await redis.del(id);
+
+      res.status(201).json({
+        success: true,
+        message: "User deleted successfully",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
