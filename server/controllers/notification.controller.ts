@@ -22,3 +22,23 @@ export const getNotifications = CatchAsyncError(
     }
   }
 );
+
+//update notification --only admin
+export const updateNotifications = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const notification = await NotificationModel.findById(req.params.id);
+      if (!notification) {
+        return next(new ErrorHandler("this notification is not exists", 400));
+      }
+      notification.status = "read";
+
+      res.status(201).json({
+        success: true,
+        notification,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
