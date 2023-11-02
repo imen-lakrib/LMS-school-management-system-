@@ -1,10 +1,10 @@
 require("dotenv").config();
 
-import express, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import ErrorHandler from "../utils/ErrorHandler";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
-import OrderModel, { IOrder } from "../models/order.model";
+import  { IOrder } from "../models/order.model";
 import userModel from "../models/user.model";
 import CourseModel from "../models/course.model";
 import NotificationModel from "../models/notification.model";
@@ -23,10 +23,6 @@ export const createOrder = CatchAsyncError(
 
       // find user:
       const user = await userModel.findById(req.user?._id);
-
-      console.log(
-        "----------------------------------------------------------------"
-      );
 
       // check if this user purshised this course or not -- TO NOT PURSHASE THE SAME COURSE AGAIN--
       const isCourseExistsInUser = user?.courses.some(
