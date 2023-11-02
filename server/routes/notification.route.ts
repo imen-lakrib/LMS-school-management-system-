@@ -7,6 +7,7 @@ import {
 } from "../controllers/notification.controller";
 
 const notificationRouter = express.Router();
+
 //course
 notificationRouter.get(
   "/get-notifications",

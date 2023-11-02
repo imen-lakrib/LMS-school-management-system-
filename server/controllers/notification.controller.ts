@@ -33,12 +33,21 @@ export const updateNotifications = CatchAsyncError(
       }
       notification.status = "read";
 
+      await notification.save();
+      // here we need notifications to use it when apdate notifications in frontend
+      const notifications = await NotificationModel.find().sort({
+        createdAt: -1,
+      });
+
       res.status(201).json({
         success: true,
-        notification,
+        notifications,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
   }
 );
+
+
+// crond job to delete notification with status read after each month
