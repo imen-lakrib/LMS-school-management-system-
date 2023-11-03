@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 import { NextFunction, Request, Response } from "express";
 
 import ErrorHandler from "../utils/ErrorHandler";
@@ -13,6 +11,7 @@ import ejs from "ejs";
 import path from "path";
 import sendEmail from "../utils/sendMail";
 import { getAllOrders, newOrder } from "../services/order.service";
+require("dotenv").config();
 
 // create order:
 export const createOrder = CatchAsyncError(

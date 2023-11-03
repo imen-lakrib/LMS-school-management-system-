@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 import { NextFunction, Request, Response } from "express";
 import CourseModel, { ICourse } from "../models/course.model";
 
@@ -15,6 +13,7 @@ import { redis } from "../utils/redis";
 import { createCourse, getAllCoursesService } from "../services/course.service";
 import mongoose from "mongoose";
 import NotificationModel from "../models/notification.model";
+require("dotenv").config();
 
 //upload course
 export const uploadCourse = CatchAsyncError(

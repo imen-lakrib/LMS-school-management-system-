@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 import { NextFunction, Request, Response } from "express";
 import userModel, { IUser } from "../models/user.model";
 import ErrorHandler from "../utils/ErrorHandler";
@@ -19,6 +17,8 @@ import {
   getUserById,
   updateUserRoleService,
 } from "../services/user.service";
+require("dotenv").config();
+
 import cloudinary from "cloudinary";
 //register user:
 
