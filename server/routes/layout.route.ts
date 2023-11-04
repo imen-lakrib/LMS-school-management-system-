@@ -1,4 +1,4 @@
-import { createLayout } from "../controllers/layout.controller";
+import { createLayout, editLayout } from "../controllers/layout.controller";
 import express from "express";
 
 import { isAuthenticated, authorizeRoles } from "../middleware/auth";
@@ -10,5 +10,13 @@ layoutRouter.post(
   authorizeRoles("admin"),
   createLayout
 );
+
+
+layoutRouter.put(
+    "/edit-lyout",
+    isAuthenticated,
+    authorizeRoles("admin"),
+    editLayout
+  );
 
 export default layoutRouter;
