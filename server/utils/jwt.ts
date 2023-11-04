@@ -1,8 +1,8 @@
-require("dotenv").config();
 import { Response } from "express";
 
 import { IUser } from "../models/user.model";
 import { redis } from "./redis";
+require("dotenv").config();
 
 interface ITokenOptions {
   expires: Date;

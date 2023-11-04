@@ -17,9 +17,10 @@ import {
   getUserById,
   updateUserRoleService,
 } from "../services/user.service";
+import cloudinary from "cloudinary";
+
 require("dotenv").config();
 
-import cloudinary from "cloudinary";
 //register user:
 
 interface IRegistrationBody {
