@@ -104,7 +104,7 @@ export const getSingleCourse = CatchAsyncError(
         );
 
         // save in redis
-        await redis.set(courseId, JSON.stringify(course));
+        await redis.set(courseId, JSON.stringify(course), "EX", 604800); //7days expiration if not using this time
 
         res.status(200).json({
           success: true,

@@ -30,7 +30,7 @@ export const isAuthenticated = CatchAsyncError(
     const user = await redis.get(decoded.id);
 
     if (!user) {
-      return new ErrorHandler("User not found", 400);
+      return new ErrorHandler("Please login to access this resourse", 400);
     }
     req.user = JSON.parse(user);
     // here probably user type not defind so craete folder @types to declare his type
