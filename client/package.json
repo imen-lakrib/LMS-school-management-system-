@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "i18next": "^23.6.0",
     "next": "14.0.1",
     "next-themes": "^0.2.1",
     "node": "^18.17.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^4.11.0"
   },
   "devDependencies": {
     "@types/node": "^20",
