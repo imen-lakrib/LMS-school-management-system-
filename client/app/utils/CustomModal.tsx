@@ -23,9 +23,21 @@ const CustomModal: FC<Props> = ({
       onClose={() => setOpen(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
     >
-      <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none">
-        <Component setOpen={setOpen} setRoute={setRoute} />
+      <Box className="bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none">
+        <div
+          style={{
+            maxWidth: "450px",
+            margin: "auto", // This will center the content inside the box
+          }}
+        >
+          <Component setOpen={setOpen} setRoute={setRoute} />
+        </div>
       </Box>
     </Modal>
   );
