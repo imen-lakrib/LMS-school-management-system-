@@ -20,7 +20,7 @@ type VerifyNumber = {
 
 const Verification: FC<Props> = ({ setRoute }) => {
   const { token } = useSelector((state: any) => state.auth);
-  const [activation, { error, isSuccess }] = useActivationMutation();
+  const [activation, { error, isSuccess, isLoading }] = useActivationMutation();
 
   const [invalidError, setInvalidError] = useState<boolean>(false);
 
@@ -114,7 +114,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
 
       <div className="w-full flex justify-center">
         <button className={`${styles.button} `} onClick={verificationHandler}>
-          Verify OTP
+          {isLoading ? "Please wait.." : " Verify OTP "}
         </button>
       </div>
 
