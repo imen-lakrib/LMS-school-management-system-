@@ -44,19 +44,19 @@ const Hero: FC<Props> = (props) => {
           <Image
             src={require("../../../public/assets/img.png")}
             alt="Your Alt Text"
-            className="rounded-full 1500px:w-[15%] 1100px:w-[10%] w-[10%] "
+            className="rounded-full   1500px:w-[12] 1100px:w-[8] w-[60px]"
           />
 
           <Image
             src={require("../../../public/assets/img.png")}
             alt="Your Alt Text"
-            className="rounded-full ml-[-20px]  1500px:w-[15%] 1100px:w-[10%] w-[10%] "
+            className="rounded-full  ml-[-20px]  1500px:w-[12] 1100px:w-[8] w-[60px] "
           />
 
           <Image
             src={require("../../../public/assets/img.png")}
             alt="Your Alt Text"
-            className="rounded-full ml-[-20px] 1500px:w-[15%] 1100px:w-[10%] w-[10%] "
+            className="rounded-full  ml-[-20px]  1500px:w-[12] 1100px:w-[8] w-[60px] "
           />
 
           <p className="font-Josefin dark: dark:text-[#edfff4] text-[#000000b3] 1000px:pl-3 text-[18px] font-[600]">
