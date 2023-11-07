@@ -19,6 +19,9 @@ const initializeApp = async () => {
   await store.dispatch(
     apiSlice.endpoints.refreshToken.initiate({ forceRefresh: true })
   );
+  await store.dispatch(
+    apiSlice.endpoints.loadUser.initiate({ forceRefresh: true })
+  );
 };
 
 initializeApp();
