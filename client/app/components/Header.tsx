@@ -34,8 +34,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
   const [logout, setLogout] = useState(false);
 
-  const {} = useLogoutQuery(undefined, {
-    skip: !logout ? true : false,
+  const {
+    /* Destructure the necessary properties */
+  } = useLogoutQuery(undefined, {
+    skip: !logout,
   });
   useEffect(() => {
     if (!user) {
@@ -46,12 +48,14 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
           avatar: data?.user?.image,
         });
       }
-      if (data === null || isSuccess) {
-        toast.success("Login successful");
+    }
+    if (data === null) {
+      if (isSuccess) {
+        toast.success("Login Success!");
       }
-      if (data === null) {
-        setLogout(true);
-      }
+    }
+    if (data === null) {
+      setLogout(true);
     }
   }, [data, user]);
 

@@ -13,7 +13,7 @@ type Props = {
   logoutHandler: any;
 };
 
-const avatarDefault = "../../../public/assets/img.png";
+const avatarDefault = "/assets/img.png";
 
 const SideBarProfile: FC<Props> = ({
   user,
@@ -31,7 +31,15 @@ const SideBarProfile: FC<Props> = ({
         }`}
       >
         <Image
-          src={user.avatar || avatar ? user.avatar || avatar : avatarDefault}
+          src={
+            user.avatar
+              ? user.avatar.url
+              : avatar
+              ? avatar || avatar
+              : avatarDefault
+          }
+          width={10}
+          height={10}
           alt=""
           className="w-[20px] h-[20px] 800px:w-[30px] 800px:h-[30px] cursor-pointer rounded-full"
         />
@@ -47,7 +55,7 @@ const SideBarProfile: FC<Props> = ({
         }`}
         onClick={() => setActive(2)}
       >
-        <RiLockPasswordLine size={20} fill="#fff" />
+        <RiLockPasswordLine size={20} className=" dark:fill-white fill-black" />
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
           Change Password
         </h5>
@@ -59,7 +67,7 @@ const SideBarProfile: FC<Props> = ({
         }`}
         onClick={() => setActive(3)}
       >
-        <SiCoursera size={20} fill="#fff" />
+        <SiCoursera size={20} className=" dark:fill-white fill-black" />
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
           Enrolled Courses
         </h5>
@@ -71,7 +79,7 @@ const SideBarProfile: FC<Props> = ({
         }`}
         onClick={() => logoutHandler()}
       >
-        <AiOutlineLogout size={20} I fill="#fff" />
+        <AiOutlineLogout size={20} className=" dark:fill-white fill-black" />
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
           Logout
         </h5>

@@ -3,7 +3,7 @@ import React, { FC, useState } from "react";
 import SideBarProfile from "./SideBarProfile";
 import { useLogoutQuery } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
-import { redirect } from "next/navigation";
+import ProfileInfo from "./ProfileInfo";
 
 type Props = {
   user: any;
@@ -15,13 +15,20 @@ const Profile: FC<Props> = ({ user }) => {
   const [active, setActive] = useState(1);
   const [logout, setLogout] = useState(false);
 
-  const {} = useLogoutQuery(undefined, {
-    skip: !logout ? true : false,
+  const {
+    /* Destructure the necessary properties */
+  } = useLogoutQuery(undefined, {
+    skip: !logout,
   });
 
   const logoutHandler = async () => {
-    signOut();
-    await setLogout(true);
+    try {
+      setLogout(true);
+
+      await signOut();
+    } catch (error) {
+      console.log("Error during logout:", error);
+    }
   };
 
   if (typeof window !== "undefined") {
@@ -48,6 +55,10 @@ const Profile: FC<Props> = ({ user }) => {
           setActive={setActive}
           logoutHandler={logoutHandler}
         />
+      </div>{" "}
+      {/* content conditional displaying */}
+      <div className="text-center w-full mt-[80px] mb-[80px]">
+        {active === 1 && <ProfileInfo user={user} avatar={avatar} />}
       </div>
     </div>
   );
