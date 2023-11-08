@@ -114,9 +114,12 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                   <Image
                     src={user.avatar ? user.avatar.url : avatar}
                     alt="Your Alt Text"
-                    className=" hidden 800px:block rounded-full  ml-[-20px]  1500px:w-[10] 1100px:w-[8] w-[40px] "
-                    width={20}
-                    height={20}
+                    className=" hidden 800px:block rounded-full  ml-[20px]  1500px:w-[10] 1100px:w-[8] w-[30px] h-[30px] "
+                    width={30}
+                    height={30}
+                    style={{
+                      border: activeItem === 5 ? "2px solid #ffc107" : "none",
+                    }}
                   />
                 </Link>
               ) : (
@@ -139,23 +142,32 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
           >
             <div className="w-[70%] fixed z-[9999999999] h-screen bg-white dark:bg-slate-900 dark:bg-opacity-90 top-0 right-0">
               <NavItems activeItem={activeItem} isMobile={true} />
-              {user ? (
-                <Link href={"/profile"}>
-                  <Image
-                    src={user.avatar ? user.avatar.url : avatar}
-                    alt="Your Alt Text"
-                    className="rounded-full  ml-[-20px]  1500px:w-[12] 1100px:w-[8] w-[60px] "
-                    width={25}
-                    height={25}
+
+              <div className="px-5">
+                {user ? (
+                  <Link href={"/profile"}>
+                    <Image
+                      src={user.avatar ? user.avatar.url : avatar}
+                      alt="Your Alt Text"
+                      className="rounded-full  1500px:w-[12] 1100px:w-[8] w-[30px]  h-[30px] "
+                      width={30}
+                      height={30}
+                      style={{
+                        border: activeItem === 5 ? "2px solid #ffc107" : "none",
+                      }}
+                    />
+                  </Link>
+                ) : (
+                  <HiOutlineUserCircle
+                    size={25}
+                    className=" block 800px:hidden cursor-pointer dark:text-white text-black"
+                    onClick={() => setOpen(true)}
+                    style={{
+                      border: activeItem === 5 ? "2px solid #ffc107" : "none",
+                    }}
                   />
-                </Link>
-              ) : (
-                <HiOutlineUserCircle
-                  size={25}
-                  className=" block 800px:hidden cursor-pointer dark:text-white text-black"
-                  onClick={() => setOpen(true)}
-                />
-              )}
+                )}
+              </div>
 
               <br />
 

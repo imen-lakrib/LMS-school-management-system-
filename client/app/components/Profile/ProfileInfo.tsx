@@ -1,6 +1,8 @@
 import { styles } from "@/app/styles/style";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import { useUpdateAvatarMutation } from "@/redux/features/user/userApi";
 import Image from "next/image";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { AiOutlineCamera } from "react-icons/ai";
 
 type Props = {
@@ -11,14 +13,38 @@ const avatarDefault = "/assets/img.png";
 
 const ProfileInfo: FC<Props> = ({ avatar, user }) => {
   const [name, setName] = useState(user && user.name);
+  const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation();
+  const [loadUser, setLoadUser] = useState(false);
 
+  const {} = useLoadUserQuery(undefined, {
+    skip: !loadUser,
+  });
   const imageHandler = async (e: any) => {
-    console.log("gggg");
+    const fileReader = new FileReader();
+
+    fileReader.onload = () => {
+      if (fileReader.readyState === 2) {
+        const avatarFile = fileReader.result;
+        console.log("avatarFile", avatarFile);
+        updateAvatar({
+          avatar: avatarFile?.toString(),
+        });
+      }
+    };
+
+    fileReader.readAsDataURL(e.target.files[0]);
   };
 
-  const handleSubmit = async (e: any) => {
-    console.log("submit");
-  };
+  useEffect(() => {
+    if (isSuccess) {
+      setLoadUser(true);
+    }
+    if (error) {
+      console.log(error);
+    }
+  }, [isSuccess, error]);
+
+  const handleSubmit = async (e: any) => {};
 
   return (
     <>

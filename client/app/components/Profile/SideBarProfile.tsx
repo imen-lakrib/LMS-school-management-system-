@@ -41,7 +41,7 @@ const SideBarProfile: FC<Props> = ({
           width={10}
           height={10}
           alt=""
-          className="w-[20px] h-[20px] 800px:w-[30px] 800px:h-[30px] cursor-pointer rounded-full"
+          className="w-[30px]  h-[30px] 800px:w-[30px] 800px:h-[30px] cursor-pointer rounded-full"
         />
 
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
