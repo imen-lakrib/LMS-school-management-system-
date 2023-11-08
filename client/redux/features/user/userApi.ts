@@ -26,10 +26,10 @@ export const userApi = apiSlice.injectEndpoints({
 
     //1- update my account
     updateMyAccount: builder.mutation({
-      query: (avatar) => ({
+      query: ({ name }) => ({
         url: "update-my-account",
         method: "POST",
-        body: { avatar },
+        body: { name },
         credentials: "include" as const,
       }),
     }),
@@ -66,4 +66,4 @@ export const userApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useUpdateAvatarMutation } = userApi;
+export const { useUpdateAvatarMutation, useUpdateMyAccountMutation } = userApi;
