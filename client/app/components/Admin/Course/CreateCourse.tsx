@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import CourseInformation from "./CourseInformation";
 import CourseOptions from "./CourseOptions";
+import CourseData from "./CourseData";
 
 type Props = {};
 
@@ -42,6 +43,32 @@ const CreateCourse = (props: Props) => {
     <div className="w-full flex min-h-screen">
       <div className="w-[80%]">
         {active === 0 && (
+          <CourseInformation
+            courseInfo={courseInfo}
+            setCourseInfo={setCourseInfo}
+            active={active}
+            setActive={setActive}
+          />
+        )}
+        {active === 1 && (
+          <CourseData
+            benefits={benefits}
+            prerequisites={prerequisites}
+            setPrerequisites={setPrerequisites}
+            setBenefits={setBenefits}
+            active={active}
+            setActive={setActive}
+          />
+        )}
+        {active === 2 && (
+          <CourseInformation
+            courseInfo={courseInfo}
+            setCourseInfo={setCourseInfo}
+            active={active}
+            setActive={setActive}
+          />
+        )}
+        {active === 3 && (
           <CourseInformation
             courseInfo={courseInfo}
             setCourseInfo={setCourseInfo}
