@@ -36,7 +36,7 @@ const DashboardHeader = (props: Props) => {
               </p>
             </div>
             <p className=" px-2 text-black dark:text-white">
-              gggggggggggggggggggggggggggggggggggggg
+              ggggggggggg gggggggg ggggggggggggg ggggggggggg
             </p>
 
             <p className=" p-2 text-black dark:text-white text-[14px] ">
@@ -44,23 +44,7 @@ const DashboardHeader = (props: Props) => {
             </p>
           </div>
 
-          <div className="dark:bg-[#2d3a4ea1] bg-[#00000013] font-Poppins border-b dark:border-b-[#ffffff47] border-b-[#0000000f]">
-            <div className=" w-full flex items-center justify-between p-2">
-              <p className=" text-black dark:text-white ">
-                New Question Received
-              </p>
-              <p className="text-black dark:text-white cursor-pointer ">
-                Mark as read
-              </p>
-            </div>
-            <p className=" px-2 text-black dark:text-white">
-              gggggggggggggggggggggggggggggggggggggg
-            </p>
-
-            <p className=" p-2 text-black dark:text-white text-[14px] ">
-              5 days ago
-            </p>
-          </div>
+         
         </div>
       )}
     </div>
