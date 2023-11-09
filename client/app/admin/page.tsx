@@ -3,8 +3,10 @@ import React, { FC, useState } from "react";
 import Protected from "../components/hooks/useProtected";
 import Heading from "../utils/Heading";
 import Header from "../components/Header";
-import Profile from "../components/Profile/Profile";
 import { useSelector } from "react-redux";
+import AdminProtected from "../components/hooks/adminProtected";
+import AdminSidebar from "./AdminSidebar";
+import DashboradHero from "./DashboradHero";
 
 type Props = {};
 
@@ -15,22 +17,22 @@ const Page: FC<Props> = (props) => {
   const { user } = useSelector((state: any) => state.auth);
   return (
     <div>
-      <Protected>
+      <AdminProtected>
         <Heading
-          title={`${user?.name}'s profile -LMS`}
+          title={`welcome ${user?.name} to Admin -LMS`}
           description="school management system"
           keywords="school, management, system"
         />
-        <Header
-          open={open}
-          setOpen={setOpen}
-          activeItem={activeItem}
-          setRoute={setRoute}
-          route={route}
-        />
+        <div className="flex h-[200vh]">
+          <div className="1500px:w-[16%] w-1/5">
+            <AdminSidebar />
+          </div>
 
-        <Profile user={user} />
-      </Protected>
+          <div className="w-[85%]">
+            <DashboradHero />
+          </div>
+        </div>
+      </AdminProtected>
     </div>
   );
 };

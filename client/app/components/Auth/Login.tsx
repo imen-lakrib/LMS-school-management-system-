@@ -95,13 +95,13 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
 
           {!show ? (
             <AiOutlineEyeInvisible
-              className="absolute bottom-3 right-2 z-1 cursor-pointer text-slate-900 dark:text-white"
+              className={`absolute bottom-3 right-2 z-1 cursor-pointer  ${styles.textColorWhite}`}
               size={20}
               onClick={() => setShow(true)}
             />
           ) : (
             <AiOutlineEye
-              className="absolute bottom-3 right-2 z-1 cursor-pointer  text-slate-900 dark:text-white"
+              className={`absolute bottom-3 right-2 z-1 cursor-pointer   ${styles.textColorWhite}`}
               size={20}
               onClick={() => setShow(false)}
             />
@@ -119,7 +119,9 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
           />
         </div>
         <br />
-        <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
+        <h5
+          className={`text-center pt-4 font-Poppins text-[14px]   ${styles.textColorWhite}`}
+        >
           Or join with
         </h5>
 
@@ -131,12 +133,14 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
           />
           <AiFillGithub
             size={30}
-            className="cursor-pointer mr-2 text-black dark:text-white "
+            className={`cursor-pointer mr-2    ${styles.textColorWhite}`}
             onClick={() => signIn("github")}
           />
         </div>
 
-        <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
+        <h5
+          className={`text-center pt-4 font-Poppins text-[14px]   ${styles.textColorWhite}`}
+        >
           Not have any account
           <span
             className="text-[#2190ff] pl-1 cursor-pointer"

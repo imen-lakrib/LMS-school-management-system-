@@ -103,7 +103,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
         <form onSubmit={handleSubmit}>
           <div className="800px:w-[50%] m-auto block pb-4">
             <div className="w-[100%]">
-              <label className="block   dark:text-white text-black">
+              <label className={`block ${styles.textColorWhite}`}>
                 Full Name
               </label>
               <input
@@ -116,7 +116,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
             </div>
 
             <div className="w-[100%] pt-4">
-              <label className="block  dark:text-white text-black">
+              <label className={`block  ${styles.textColorWhite}`}>
                 Email Address
               </label>
               <input
@@ -129,7 +129,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
 
             <input
               type="submit"
-              className={`w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-white text-black rounded-[3px] mt-8 cursor-pointer`}
+              className={`w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center ${styles.textColorWhite} rounded-[3px] mt-8 cursor-pointer`}
               required
               value="Update"
             />

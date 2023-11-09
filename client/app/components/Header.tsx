@@ -18,6 +18,7 @@ import {
   useSocialAuthMutation,
 } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
+import { styles } from "../styles/style";
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -89,7 +90,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
           <div className="w-full h-[80px] flex items-center justify-between p-3">
             <div>
               <Link
-                className={`text-[25px] font-Poppins font-[500] text-black dark:text-white`}
+                className={`text-[25px] font-Poppins font-[500] ${styles.textColorWhite}`}
                 href={"/"}
               >
                 {" "}
@@ -104,7 +105,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               <div className="800px:hidden">
                 <HiOutlineMenuAlt3
                   size={25}
-                  className="cursor-pointer dark:text-white text-black"
+                  className={`cursor-pointer ${styles.textColorWhite}`}
                   onClick={() => setOpenSideBar(true)}
                 />
               </div>
@@ -125,7 +126,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               ) : (
                 <HiOutlineUserCircle
                   size={25}
-                  className="hidden 800px:block cursor-pointer dark:text-white text-black"
+                  className={`hidden 800px:block cursor-pointer ${styles.textColorWhite}`}
                   onClick={() => setOpen(true)}
                 />
               )}
@@ -160,7 +161,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                 ) : (
                   <HiOutlineUserCircle
                     size={25}
-                    className=" block 800px:hidden cursor-pointer dark:text-white text-black"
+                    className={`block 800px:hidden cursor-pointer ${styles.textColorWhite}`}
                     onClick={() => setOpen(true)}
                     style={{
                       border: activeItem === 5 ? "2px solid #ffc107" : "none",
@@ -172,7 +173,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               <br />
 
               <br />
-              <p className="text-[16px] px-2 pl-5 text-black dark:text-white">
+              <p className={`text-[16px] px-2 pl-5 ${styles.textColorWhite}`}>
                 Copyright c 2024 LMS
               </p>
             </div>

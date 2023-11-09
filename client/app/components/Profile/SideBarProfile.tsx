@@ -1,9 +1,11 @@
 import { RiLockPasswordLine } from "react-icons/ri";
-import { SiCoursera } from "react-icons/si";
-
+import { SiGoogleclassroom } from "react-icons/si";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import Image from "next/image";
 import React, { FC } from "react";
 import { AiOutlineLogout } from "react-icons/ai";
+import { styles } from "@/app/styles/style";
+import Link from "next/link";
 
 type Props = {
   user: any;
@@ -44,7 +46,9 @@ const SideBarProfile: FC<Props> = ({
           className="w-[30px]  h-[30px] 800px:w-[30px] 800px:h-[30px] cursor-pointer rounded-full"
         />
 
-        <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
+        <h5
+          className={`pl-2 800px:block hidden font-Poppins ${styles.textColorWhite}`}
+        >
           My Account
         </h5>
       </div>
@@ -56,7 +60,9 @@ const SideBarProfile: FC<Props> = ({
         onClick={() => setActive(2)}
       >
         <RiLockPasswordLine size={20} className=" dark:fill-white fill-black" />
-        <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
+        <h5
+          className={`pl-2 800px:block hidden font-Poppins ${styles.textColorWhite}`}
+        >
           Change Password
         </h5>
       </div>
@@ -67,11 +73,32 @@ const SideBarProfile: FC<Props> = ({
         }`}
         onClick={() => setActive(3)}
       >
-        <SiCoursera size={20} className=" dark:fill-white fill-black" />
-        <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
+        <SiGoogleclassroom size={20} className=" dark:fill-white fill-black" />
+        <h5
+          className={`pl-2 800px:block hidden font-Poppins ${styles.textColorWhite}`}
+        >
           Enrolled Courses
         </h5>
       </div>
+
+      {user.role === "admin" && (
+        <Link
+          href={"/admin"}
+          className={`w-full flex items-center px-3 py-4 cursor-pointer ${
+            active === 6 ? "dark:bg-slate-800 bg-white" : "bg-transparent"
+          }`}
+        >
+          <MdOutlineAdminPanelSettings
+            size={20}
+            className=" dark:fill-white fill-black"
+          />
+          <h5
+            className={`pl-2 800px:block hidden font-Poppins ${styles.textColorWhite}`}
+          >
+            Admin Dashboard
+          </h5>
+        </Link>
+      )}
 
       <div
         className={`w-full flex items-center px-3 py-4 cursor-pointer ${
@@ -80,7 +107,9 @@ const SideBarProfile: FC<Props> = ({
         onClick={() => logoutHandler()}
       >
         <AiOutlineLogout size={20} className=" dark:fill-white fill-black" />
-        <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
+        <h5
+          className={`pl-2 800px:block hidden font-Poppins ${styles.textColorWhite}`}
+        >
           Logout
         </h5>
       </div>
