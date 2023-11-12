@@ -1,7 +1,7 @@
 "use client";
 import { useTheme } from "next-themes";
 import {
-    AddAPhotoOutlined,
+  AddAPhotoOutlined,
   AddCircleOutline,
   AddToDrive,
   ArrowBackIos,
@@ -160,6 +160,8 @@ const Sidebar = () => {
                     cursor: "pointer",
                     borderRadius: "50%",
                     border: "3px solid #5b6fe6",
+                    width: 100,
+                    height: 100,
                   }}
                 />
               </Box>
