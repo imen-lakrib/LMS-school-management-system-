@@ -13,6 +13,7 @@ import { redis } from "../utils/redis";
 import { createCourse, getAllCoursesService } from "../services/course.service";
 import mongoose from "mongoose";
 import NotificationModel from "../models/notification.model";
+import axios from "axios";
 require("dotenv").config();
 
 //upload course
@@ -472,6 +473,29 @@ export const deleteCoure = CatchAsyncError(
         success: true,
         message: "cCurse deleted successfully",
       });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+// generate video url:
+export const generateVideoUrl = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { videoId } = req.body;
+      const response = await axios.post(
+        `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+        { ttl: 300 },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Apisecret ${process.env.VDOCIPER_API_SECRET}`,
+          },
+        }
+      );
+      res.json(response.data);
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
