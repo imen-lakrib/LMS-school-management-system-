@@ -237,7 +237,7 @@ const Sidebar = () => {
             />
             <Item
               title="Live Courses"
-              to="/admin/liveCourses"
+              to="/admin/courses"
               icon={<LiveTvOutlined />}
               selected={selected}
               setSelected={setSelected}
