@@ -15,13 +15,11 @@ import {
   getSingleCourse,
   uploadCourse,
 } from "../controllers/course.controller";
-import { updateAccessToken } from "../controllers/user.controller";
 
 const courseRouter = express.Router();
 //course
 courseRouter.post(
   "/create-course",
-  updateAccessToken,
   isAuthenticated,
   authorizeRoles("admin"),
   uploadCourse
@@ -55,7 +53,6 @@ courseRouter.get(
 
 courseRouter.delete(
   "/delete-course/:id",
-  updateAccessToken,
   isAuthenticated,
   authorizeRoles("admin"),
   deleteCoure

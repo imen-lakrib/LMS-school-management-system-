@@ -52,6 +52,8 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    //token refresh eachTime "stratigy token sliding or token rotation"
+
     //1- delete User
     deleteUser: builder.mutation({
       query: (avatar) => ({

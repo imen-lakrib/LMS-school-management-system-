@@ -103,8 +103,8 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
       });
   }
 
-  const handleSubmit = () => {
-    updateUserRole(email)
+  const handleSubmit = async () => {
+    await updateUserRole({ email, role });
   };
 
   return (
