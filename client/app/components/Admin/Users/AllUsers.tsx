@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button, Modal } from "@mui/material";
 import { AiFillEdit, AiOutlineDelete } from "react-icons/ai";
@@ -11,6 +11,7 @@ import {
 } from "@/redux/features/user/userApi";
 import { MdOutlineEmail } from "react-icons/md";
 import { styles } from "../../../styles/style";
+import toast from "react-hot-toast";
 
 type Props = {
   isTeam: Boolean;
@@ -27,6 +28,20 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     updateUserRole,
     { error: errorRole, isLoading: isLoadingRole, isSuccess: isSuccessRole },
   ] = useUpdateUserRoleMutation();
+
+  useEffect(() => {
+    if (errorRole) {
+      if ("data" in errorRole) {
+        const errorMessage = errorRole as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+
+    if (isSuccessRole) {
+      toast.success("User role updated successfully");
+      setActive(false);
+    }
+  }, [errorRole, isLoadingRole, isSuccessRole]);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },

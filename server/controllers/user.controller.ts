@@ -429,9 +429,10 @@ export const getUsers = CatchAsyncError(
 export const updateUserRole = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id, role, email } = req.body;
+      const { role, email } = req.body;
       const isUserExist = await userModel.findOne({ email });
       if (isUserExist) {
+        const id = isUserExist._id;
         updateUserRoleService(res, id, role);
       } else {
         res.status(400).json({
