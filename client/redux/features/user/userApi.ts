@@ -34,22 +34,20 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    //1- update user role
-    updateUserRole: builder.mutation({
-      query: (avatar) => ({
-        url: "update-user-role",
-        method: "PUT",
-        body: { avatar },
-        credentials: "include" as const,
-      }),
-    }),
-
-    //1- Get all users
+    //4- Get all users
     getAllUsers: builder.query({
       query: (avatar) => ({
         url: "all-users-admin",
         method: "GET",
-        body: { avatar },
+        credentials: "include" as const,
+      }),
+    }),
+    //5- update user role
+    updateUserRole: builder.mutation({
+      query: ({ email, role }) => ({
+        url: "update-user-role",
+        method: "PUT",
+        body: { email, role },
         credentials: "include" as const,
       }),
     }),
@@ -70,4 +68,6 @@ export const {
   useUpdateAvatarMutation,
   useUpdateMyAccountMutation,
   useUpdatePasswordMutation,
+  useGetAllUsersQuery,
+  useUpdateUserRoleMutation,
 } = userApi;

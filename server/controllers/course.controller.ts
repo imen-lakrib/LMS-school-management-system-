@@ -118,7 +118,7 @@ export const getSingleCourse = CatchAsyncError(
   }
 );
 
-// get all courses --- without purchasing ---:
+// get all courses --- everyone ---:
 
 export const getAllCourses = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -440,7 +440,7 @@ export const addReplayToReview = CatchAsyncError(
   }
 );
 
-//get all courses
+//get all courses for admin
 export const getCourses = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
