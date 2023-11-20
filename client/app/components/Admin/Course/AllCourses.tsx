@@ -1,19 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import { AiFillEdit, AiOutlineDelete } from "react-icons/ai";
 import { useTheme } from "next-themes";
-import { useGetAllCoursesQuery } from "@/redux/features/courses/coursesApi";
+import {
+  useDeleteCouresMutation,
+  useGetAllCoursesQuery,
+} from "@/redux/features/courses/coursesApi";
 import { Loader } from "../../Loader/Loader";
-import { format } from 'timeago.js';
-
+import { format } from "timeago.js";
+import { styles } from "@/app/styles/style";
+import toast from "react-hot-toast";
 
 type Props = {};
 
 const AllCourses = (props: Props) => {
   const { theme, setTheme } = useTheme();
 
-  const { data, error, isLoading, isSuccess } = useGetAllCoursesQuery({});
+  const [oepnDeleteCourse, setOpenDeleteCourse] = useState(false);
+  const [courseId, setCourseId] = useState("");
+
+  const { data, error, isLoading, isSuccess, refetch } = useGetAllCoursesQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
+
+  const [
+    deleteCourse,
+    {
+      error: errorDelete,
+      isLoading: isLoadingDelete,
+      isSuccess: isSuccessDelete,
+    },
+  ] = useDeleteCouresMutation();
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
@@ -43,7 +62,12 @@ const AllCourses = (props: Props) => {
       renderCell: (params: any) => {
         return (
           <>
-            <Button>
+            <Button
+              onClick={() => {
+                setOpenDeleteCourse(!oepnDeleteCourse);
+                setCourseId(params.row.id);
+              }}
+            >
               <AiOutlineDelete
                 className="dark:text-white text-black"
                 size={20}
@@ -54,7 +78,7 @@ const AllCourses = (props: Props) => {
       },
     },
   ];
-  const rows:any = [];
+  const rows: any = [];
   {
     data &&
       data.courses.forEach((item: any) => {
@@ -67,6 +91,27 @@ const AllCourses = (props: Props) => {
         });
       });
   }
+
+  useEffect(() => {
+    if (isSuccessDelete) {
+      refetch();
+
+      toast.success("Course deleted successfully");
+      setOpenDeleteCourse(!oepnDeleteCourse);
+    }
+
+    if (errorDelete) {
+      if ("data" in errorDelete) {
+        const errorMessage = errorDelete as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [isSuccessDelete, errorDelete]);
+
+  const handleDelete = async () => {
+    const id = courseId;
+    await deleteCourse(id);
+  };
 
   return (
     <div className="mt-[120px]">
@@ -131,6 +176,42 @@ const AllCourses = (props: Props) => {
           >
             <DataGrid checkboxSelection rows={rows} columns={columns} />
           </Box>
+
+          {oepnDeleteCourse && (
+            <Modal
+              open={oepnDeleteCourse}
+              onClose={() => setOpenDeleteCourse(!oepnDeleteCourse)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box className="w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none mx-auto">
+                <h1 className={`${styles.title} `}>
+                  Are you sure you want to delete this course?
+                </h1>
+
+                <div className="flex w-full items-center justify-between mb-6 mt-4">
+                  <div
+                    onClick={() => setOpenDeleteCourse(!oepnDeleteCourse)}
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#57c7a3]`}
+                  >
+                    Cancel
+                  </div>
+
+                  <div
+                    onClick={handleDelete}
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#d63f3f]`}
+                  >
+                    Delete
+                  </div>
+                </div>
+              </Box>
+            </Modal>
+          )}
         </Box>
       )}
     </div>
