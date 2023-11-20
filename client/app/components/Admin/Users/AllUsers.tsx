@@ -26,7 +26,10 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
   const [oepnDeleteUser, setOpenDeleteUser] = useState(false);
   const [userId, setUserId] = useState("");
 
-  const { data, error, isLoading, isSuccess } = useGetAllUsersQuery({});
+  const { data, error, isLoading, isSuccess, refetch } = useGetAllUsersQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
   const [
     updateUserRole,
     { error: errorRole, isLoading: isLoadingRole, isSuccess: isSuccessRole },
@@ -50,11 +53,14 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     }
 
     if (isSuccessRole) {
+      refetch();
       toast.success("User role updated successfully");
       setActive(false);
     }
 
     if (isSuccessDelete) {
+      refetch();
+
       toast.success("Delete user successfully");
       setOpenDeleteUser(!oepnDeleteUser);
     }
