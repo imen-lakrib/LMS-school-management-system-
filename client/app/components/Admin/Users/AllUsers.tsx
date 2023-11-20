@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { Loader } from "../../Loader/Loader";
 import { format } from "timeago.js";
 import {
+  useDeleteUserMutation,
   useGetAllUsersQuery,
   useUpdateUserRoleMutation,
 } from "@/redux/features/user/userApi";
@@ -22,12 +23,23 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
   const [active, setActive] = useState(false);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("admin");
+  const [oepnDeleteUser, setOpenDeleteUser] = useState(false);
+  const [userId, setUserId] = useState("");
 
   const { data, error, isLoading, isSuccess } = useGetAllUsersQuery({});
   const [
     updateUserRole,
     { error: errorRole, isLoading: isLoadingRole, isSuccess: isSuccessRole },
   ] = useUpdateUserRoleMutation();
+
+  const [
+    deleteUser,
+    {
+      error: errorDelete,
+      isLoading: isLoadingDelete,
+      isSuccess: isSuccessDelete,
+    },
+  ] = useDeleteUserMutation();
 
   useEffect(() => {
     if (errorRole) {
@@ -41,7 +53,19 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
       toast.success("User role updated successfully");
       setActive(false);
     }
-  }, [errorRole, isLoadingRole, isSuccessRole]);
+
+    if (isSuccessDelete) {
+      toast.success("Delete user successfully");
+      setOpenDeleteUser(!oepnDeleteUser);
+    }
+
+    if (errorDelete) {
+      if ("data" in errorDelete) {
+        const errorMessage = errorDelete as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [errorRole, isSuccessRole, isSuccessDelete, errorDelete]);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
@@ -58,7 +82,12 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
       renderCell: (params: any) => {
         return (
           <>
-            <Button>
+            <Button
+              onClick={() => {
+                setOpenDeleteUser(!oepnDeleteUser);
+                setUserId(params.row.id);
+              }}
+            >
               <AiOutlineDelete
                 className="dark:text-white text-black"
                 size={20}
@@ -120,6 +149,11 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
 
   const handleSubmit = async () => {
     await updateUserRole({ email, role });
+  };
+
+  const handleDelete = async () => {
+    const id = userId;
+    await deleteUser(id);
   };
 
   return (
@@ -209,7 +243,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                 justifyContent: "center",
               }}
             >
-              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 translate-y-1/2 w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none">
+              <Box className="w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none mx-auto">
                 <h1 className={`${styles.title} `}>Add New Member</h1>
                 <div className="mt-4">
                   <input
@@ -235,6 +269,42 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                     onClick={handleSubmit}
                   >
                     Submit
+                  </div>
+                </div>
+              </Box>
+            </Modal>
+          )}
+
+          {oepnDeleteUser && (
+            <Modal
+              open={oepnDeleteUser}
+              onClose={() => setOpenDeleteUser(!oepnDeleteUser)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box className="w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none mx-auto">
+                <h1 className={`${styles.title} `}>
+                  Are you sure you want to delete this user?
+                </h1>
+
+                <div className="flex w-full items-center justify-between mb-6 mt-4">
+                  <div
+                    onClick={() => setOpenDeleteUser(!oepnDeleteUser)}
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#57c7a3]`}
+                  >
+                    Cancel
+                  </div>
+
+                  <div
+                    onClick={handleDelete}
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#d63f3f]`}
+                  >
+                    Delete
                   </div>
                 </div>
               </Box>

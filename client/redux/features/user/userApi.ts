@@ -54,12 +54,11 @@ export const userApi = apiSlice.injectEndpoints({
 
     //token refresh eachTime "stratigy token sliding or token rotation"
 
-    //1- delete User
+    //6- delete User // here delete with params
     deleteUser: builder.mutation({
-      query: (avatar) => ({
-        url: "delete-user",
+      query: (id) => ({
+        url: `delete-user/${id}`,
         method: "DELETE",
-        body: { avatar },
         credentials: "include" as const,
       }),
     }),
@@ -72,4 +71,5 @@ export const {
   useUpdatePasswordMutation,
   useGetAllUsersQuery,
   useUpdateUserRoleMutation,
+  useDeleteUserMutation,
 } = userApi;
