@@ -8,6 +8,7 @@ import CoursePreview from "./CoursePreview";
 import {
   useCreateCouresMutation,
   useGetAllCoursesQuery,
+  useUpdateCouresMutation,
 } from "@/redux/features/courses/coursesApi";
 import toast from "react-hot-toast";
 import { redirect, useParams } from "next/navigation";
@@ -19,6 +20,11 @@ const EditCourse: FC<Props> = ({ id }) => {
     {},
     { refetchOnMountOrArgChange: true }
   );
+
+  const [
+    updateCoures,
+    { isLoading: loadingEdit, isSuccess: successEdit, error: errorEdit },
+  ] = useUpdateCouresMutation();
 
   const editCourseData = data && data.courses.find((i: any) => i._id === id);
 
@@ -71,6 +77,19 @@ const EditCourse: FC<Props> = ({ id }) => {
     },
   ]);
 
+  useEffect(() => {
+    if (successEdit) {
+      toast.success("Course updated successfully");
+      redirect("/admin/courses");
+    }
+    if (errorEdit) {
+      if ("data" in errorEdit) {
+        const errorMessage = errorEdit as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [successEdit, errorEdit]);
+
   const [courseData, setCourseData] = useState({});
 
   const handleSubmit = async () => {
@@ -121,8 +140,7 @@ const EditCourse: FC<Props> = ({ id }) => {
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
     if (!isLoading) {
-      //   await createCoures(data);
-      console.log("editCourseData", editCourseData);
+      await updateCoures({ id: editCourseData?._id, data });
     }
   };
   return (
@@ -162,12 +180,12 @@ const EditCourse: FC<Props> = ({ id }) => {
             handleCourseCreate={handleCourseCreate}
             active={active}
             setActive={setActive}
-            isEdit={true} 
+            isEdit={true}
           />
         )}
       </div>
       <div className="w-[20%] mt-[100px] h-screen fixed z-[-1] top-18 right-0">
-        <CourseOptions active={active} setActive={setActive}/>
+        <CourseOptions active={active} setActive={setActive} />
       </div>
     </div>
   );
