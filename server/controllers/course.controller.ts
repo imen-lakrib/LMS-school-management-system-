@@ -49,22 +49,43 @@ export const editCourse = CatchAsyncError(
     try {
       const data = req.body;
       const thumbnail = data.thumbnail;
-      if (thumbnail) {
-        // delete the old thumbnail from cloudinary
-        await cloudinary.v2.uploader.destroy(thumbnail.public_id);
-        // upload the new one
+      // get course id
+      const courseId = req.params.id;
+
+      const courseData = (await CourseModel.findById(courseId)) as any;
+      if (thumbnail && !thumbnail.startsWith("https")) {
+        await cloudinary.v2.uploader.destroy(courseData.thumbnail.public_id);
+
         const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
           folder: "courses",
         });
-        // give it the link
+
         data.thumbnail = {
           public_id: myCloud.public_id,
           url: myCloud.secure_url,
         };
       }
 
-      // get course id
-      const courseId = req.params.id;
+      if (thumbnail.startsWith("http")) {
+        data.thumbnail = {
+          public_id: courseData?.thumbnail.public_id,
+          url: courseData?.thumbnail.url,
+        };
+      }
+
+      // if (thumbnail) {
+      //   // delete the old thumbnail from cloudinary
+      //   await cloudinary.v2.uploader.destroy(thumbnail.public_id);
+      //   // upload the new one
+      //   const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
+      //     folder: "courses",
+      //   });
+      //   // give it the link
+      //   data.thumbnail = {
+      //     public_id: myCloud.public_id,
+      //     url: myCloud.secure_url,
+      //   };
+      // }
 
       const course = await CourseModel.findByIdAndUpdate(
         courseId,
