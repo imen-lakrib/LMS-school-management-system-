@@ -1,6 +1,10 @@
 import { styles } from "@/app/styles/style";
-import { useGetLayoutQuery } from "@/redux/features/layout/layoutApi";
+import {
+  useEditLayoutMutation,
+  useGetLayoutQuery,
+} from "@/redux/features/layout/layoutApi";
 import React, { FC, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineCamera } from "react-icons/ai";
 
 type Props = {};
@@ -10,9 +14,11 @@ const EditHero: FC<Props> = () => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
 
-  const { data } = useGetLayoutQuery("Banner", {
+  const { data, refetch } = useGetLayoutQuery("Banner", {
     refetchOnMountOrArgChange: true,
   });
+
+  const [editLayout, { isLoading, isSuccess, error }] = useEditLayoutMutation();
 
   useEffect(() => {
     if (data) {
@@ -20,10 +26,35 @@ const EditHero: FC<Props> = () => {
       setTitle(data?.layout?.banner.title);
       setSubTitle(data?.layout?.banner.subTitle);
     }
-  }, [data]);
 
-  const handleUpdate = (e: any) => {};
-  const handleEdit = (e: any) => {};
+    if (isSuccess) {
+      refetch();
+      toast.success("Hero updated successfuly");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData?.data?.message);
+      }
+    }
+  }, [data, isSuccess, error]);
+
+  // this is for image update
+  const handleUpdate = (e: any) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        if (reader.readyState === 2) {
+          setImage(e.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleEdit = async (e: any) => {
+    await editLayout({ type: "Banner", image, title, subTitle });
+  };
 
   return (
     <>
