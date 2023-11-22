@@ -1,6 +1,7 @@
 "use client";
 import { styles } from "@/app/styles/style";
-import React, { FC, useState } from "react";
+import { useGetLayoutQuery } from "@/redux/features/layout/layoutApi";
+import React, { FC, useEffect, useState } from "react";
 
 type Props = {
   courseInfo: any;
@@ -59,6 +60,17 @@ const CourseInformation: FC<Props> = ({
       reader.readAsDataURL(file);
     }
   };
+
+  //fetch Categories data
+  const { data } = useGetLayoutQuery("Categories", {});
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      setCategories(data.layout?.categories);
+    }
+  }, [data]);
+
   return (
     <div className="w-[80%] m-auto mt-24">
       <form onSubmit={handleSubmit}>
@@ -137,8 +149,46 @@ const CourseInformation: FC<Props> = ({
           </div>
         </div>
 
+        <div className="w-full flex justify-between">
+          <div className="w-[45%]">
+            <label className={`${styles.label}`} htmlFor="">
+              Course Tags
+            </label>
+            <input
+              name=""
+              required
+              type="text"
+              value={courseInfo.tags}
+              onChange={(e: any) =>
+                setCourseInfo({ ...courseInfo, tags: e.target.value })
+              }
+              id="tags"
+              placeholder="tags"
+              className={`${styles.input}`}
+            />
+          </div>
+
+          {/* here */}
+          <div className="w-[45%]">
+            <label className={`${styles.label}`} htmlFor="">
+              Course Categories
+            </label>
+            <select name="" id="" className={`${styles.input}`}>
+              <option value="">Select category</option>
+              {categories &&
+                categories.map((item: any) => (
+                  <option value={item._id} key={item._id}>
+                    {item.title}
+                  </option>
+                ))}
+            </select>
+
+            {/* add something in here  */}
+          </div>
+        </div>
+
         <br />
-        <div>
+        {/* <div>
           <label className={`${styles.label}`} htmlFor="">
             Course Tags
           </label>
@@ -154,7 +204,7 @@ const CourseInformation: FC<Props> = ({
             placeholder="tags"
             className={`${styles.input}`}
           />
-        </div>
+        </div> */}
 
         <br />
         <div className="w-full flex justify-between">

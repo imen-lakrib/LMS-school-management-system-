@@ -46,11 +46,11 @@ export const createLayout = CatchAsyncError(
         await LayoutModel.create({ type: "FAQ", faq: faqItems });
       }
 
-      if (type === "Qategories") {
-        const { qategories } = req.body;
+      if (type === "Categories") {
+        const { categories } = req.body;
 
         const categoriesItems = await Promise.all(
-          qategories.map(async (item: any) => {
+          categories.map(async (item: any) => {
             return {
               title: item.title,
             };
@@ -58,8 +58,8 @@ export const createLayout = CatchAsyncError(
         );
 
         await LayoutModel.create({
-          type: "Qategories",
-          qategories: categoriesItems,
+          type: "Categories",
+          categories: categoriesItems,
         });
       }
 
@@ -131,12 +131,12 @@ export const editLayout = CatchAsyncError(
         });
       }
 
-      if (type === "Qategories") {
-        const { qategories } = req.body;
-        const categoryItem = await LayoutModel.findOne({ type: "Qategories" });
+      if (type === "Categories") {
+        const { categories } = req.body;
+        const categoryItem = await LayoutModel.findOne({ type: "Categories" });
 
         const categoriesItems = await Promise.all(
-          qategories.map(async (item: any) => {
+          categories.map((item: any) => {
             return {
               title: item.title,
             };
@@ -144,8 +144,8 @@ export const editLayout = CatchAsyncError(
         );
 
         await LayoutModel.findByIdAndUpdate(categoryItem?.id, {
-          type: "Qategories",
-          qategories: categoriesItems,
+          type: "Categories",
+          categories: categoriesItems,
         });
       }
 
