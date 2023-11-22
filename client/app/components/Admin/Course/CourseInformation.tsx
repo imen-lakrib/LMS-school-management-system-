@@ -173,14 +173,21 @@ const CourseInformation: FC<Props> = ({
             <label className={`${styles.label}`} htmlFor="">
               Course Categories
             </label>
-            <select name="" id="" className={`${styles.input}`}>
+            <select
+              name=""
+              id=""
+              className={`${styles.input}`}
+              value={courseInfo.categories}
+              onChange={(e: any) =>
+                setCourseInfo({ ...courseInfo, categories: e.target.value })
+              }
+            >
               <option value="">Select category</option>
-              {categories &&
-                categories.map((item: any) => (
-                  <option value={item._id} key={item._id}>
-                    {item.title}
-                  </option>
-                ))}
+              {categories.map((item: any) => (
+                <option value={item._id} key={item._id}>
+                  {item.title}
+                </option>
+              ))}
             </select>
 
             {/* add something in here  */}
