@@ -8,7 +8,7 @@ import DashboradHero from "../DashboradHero";
 import CreateCourse from "../../components/Admin/Course/CreateCourse";
 import DashboardHeader from "../DashboardHeader";
 import AllCourses from "../../components/Admin/Course/AllCourses";
-import EditHero from "@/app/components/Admin/Customization/EditHero";
+import EditFAQ from "@/app/components/Admin/Customization/EditFAQ";
 type Props = {};
 
 const Page: FC<Props> = (props) => {
@@ -31,9 +31,7 @@ const Page: FC<Props> = (props) => {
 
           <div className="w-[85%]">
             <DashboradHero />
-            <EditHero />
-
-            hero
+            <EditFAQ />
           </div>
         </div>
       </AdminProtected>
