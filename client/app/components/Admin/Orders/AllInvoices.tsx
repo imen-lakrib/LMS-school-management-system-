@@ -114,8 +114,50 @@ const AllInvoices: FC<Props> = ({ isDashboard }) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <Box m={isDashboard ? "0" : "40px 0 0 0 "}>
-          <Box>
+        <Box m={isDashboard ? "0" : "40px"}>
+          <Box
+            m={isDashboard ? "0" : "40px  0 0 0 "}
+            height={isDashboard ? "35vh" : "90vh"}
+            overflow={"hidden"}
+            sx={{
+              "& .MuiDataGrid-root": {
+                border: "none",
+                outline: "none",
+              },
+              "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon": {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+              "& .MuiDataGrid-sortIcon": {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+              "& .MuiDataGrid-row": {
+                color: theme === "dark" ? "#fff" : "#000",
+                borderBottom:
+                  theme === "dark"
+                    ? "1px solid #ffffff30 !important"
+                    : "1px solid #ccc !important",
+              },
+
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: theme === "dark" ? "#1f2a40" : "#f2f0f0",
+              },
+
+              "& .MuiDataGrid-footerContainer": {
+                color: theme === "dark" ? "#fff" : "#000",
+                borderTop: "none",
+                backgroundColor: theme === "dark" ? "#3e4396" : "#A4A9FC",
+              },
+
+              "& .MuiCheckbox+root": {
+                color:
+                  theme === "dark" ? "#b7ebde !important" : "#000 !important",
+              },
+
+              "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                color: "#fff !important",
+              },
+            }}
+          >
             <DataGrid
               checkboxSelection={isDashboard ? false : true}
               rows={rows}
