@@ -104,6 +104,10 @@ const Sidebar = () => {
         "& .pro-menu-item": {
           color: `${theme !== "dark" && "#000"}`,
         },
+        "& .pro-menu-item.active-item": {
+          color: "#6870fa !important",
+          backgroundColor: "#f0f0f0",
+        },
       }}
       className="!bg-white dark:bg-[#111C43]"
     >
@@ -197,7 +201,7 @@ const Sidebar = () => {
 
             <Typography
               variant="h6"
-              className="!text-[18px] text-black dark:text-white capitalize !font-[400]"
+              className={`!text-[18px] text-black dark:text-white capitalize !font-[400]`}
               sx={{ m: "15px 0 5px 20px" }}
             >
               {" "}

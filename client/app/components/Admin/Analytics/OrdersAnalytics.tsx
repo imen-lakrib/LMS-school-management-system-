@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 
 import {
   BarChart,
@@ -13,9 +13,9 @@ import { Loader } from "../../Loader/Loader";
 import { useOrdersAnalyticsQuery } from "@/redux/features/analytics/analyticsApi";
 import { styles } from "@/app/styles/style";
 
-type Props = {};
+type Props = { isDashboard?: boolean };
 
-const OrdersAnalytics = (props: Props) => {
+const OrdersAnalytics: FC<Props> = ({ isDashboard }) => {
   const { data, isLoading, isSuccess, error } = useOrdersAnalyticsQuery({});
   //   const analyticsData = [
   //     { name: "June 2023", uv: 2 },

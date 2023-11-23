@@ -1,12 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import ThemeSwitcher from "../utils/ThemeSwitcher";
 import { NotificationImportant } from "@mui/icons-material";
 
-type Props = {};
+type Props = {
+  open?: boolean;
+  setOpen?: any;
+};
 
-const DashboardHeader = (props: Props) => {
-  const [open, setOpen] = useState(false);
+const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
   return (
     <div className="w-full flex items-center justify-end p-6 fixed top-5 right-0">
       <ThemeSwitcher />
@@ -43,8 +45,6 @@ const DashboardHeader = (props: Props) => {
               5 days ago
             </p>
           </div>
-
-         
         </div>
       )}
     </div>

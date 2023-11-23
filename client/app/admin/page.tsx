@@ -29,7 +29,7 @@ const Page: FC<Props> = (props) => {
           </div>
 
           <div className="w-[85%]">
-            <DashboradHero />
+            <DashboradHero isDashboard={true} />
           </div>
         </div>
       </AdminProtected>
