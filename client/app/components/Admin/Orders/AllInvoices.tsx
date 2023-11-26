@@ -137,6 +137,20 @@ const AllInvoices: FC<Props> = ({ isDashboard }) => {
                     ? "1px solid #ffffff30 !important"
                     : "1px solid #ccc !important",
               },
+              "& .MuiTablePagination-root": {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none !important",
+              },
+              "& .name-column--cell": {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                borderBottom: "none",
+                backgroundColor: theme === "dark" ? "#3e4396" : "#A4A9FC",
+                color: theme === "dark" ? "#fff" : "#000",
+              },
 
               "& .MuiDataGrid-virtualScroller": {
                 backgroundColor: theme === "dark" ? "#1f2a40" : "#f2f0f0",
