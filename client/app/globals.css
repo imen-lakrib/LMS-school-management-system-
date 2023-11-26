@@ -54,6 +54,16 @@ body {
   animation: changeBackgroundColor 8s infinite alternate;
 }
 
+.text-gradient {
+  background: linear-gradient(
+    to right,
+    #1771c6,
+    #32ae7e
+  ); /* Adjust colors as needed */
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
 @keyframes changeBackgroundColor {
   0%,
   100% {

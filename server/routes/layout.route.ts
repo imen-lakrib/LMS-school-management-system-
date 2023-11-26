@@ -15,6 +15,8 @@ layoutRouter.post(
   createLayout
 );
 
+layoutRouter.get("/get-layout", getLayoutByType);
+
 layoutRouter.put(
   "/edit-layout",
   isAuthenticated,

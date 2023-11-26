@@ -24,9 +24,10 @@ export const createLayout = CatchAsyncError(
           type: "Banner",
           banner: {
             image: { public_id: myCloud.public_id, url: myCloud.secure_url },
+            title,
+            subTitle,
           },
-          title,
-          subTitle,
+         
         };
 
         await LayoutModel.create(banner);
@@ -109,7 +110,7 @@ export const editLayout = CatchAsyncError(
           subTitle,
         };
 
-        await LayoutModel.findByIdAndUpdate(bannerData.id, { banner });
+        await LayoutModel.findByIdAndUpdate(bannerData?._id, { banner });
       }
 
       if (type === "FAQ") {

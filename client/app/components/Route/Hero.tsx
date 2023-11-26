@@ -1,15 +1,19 @@
 import { styles } from "@/app/styles/style";
+import { useGetLayoutQuery } from "@/redux/features/layout/layoutApi";
 import Image from "next/image";
 import Link from "next/link";
 import React, { FC } from "react";
 import { BiSearch } from "react-icons/bi";
 type Props = {};
 const Hero: FC<Props> = (props) => {
+  const { data } = useGetLayoutQuery("Banner", {});
   return (
     <div className="w-full 1000px:flex items-center">
       <div className="1000px:w-[40%] flex 1000px:min-h-screen items-center justify-center pt-[70px] 1000px:pt-[0] z-10 relative ">
         <Image
-          src={require("../../../public/assets/illust.png")}
+          src={data?.layout?.banner?.image?.url}
+          width={400}
+          height={400}
           alt=""
           className="object-contain 1100px:max-w-[90%] w-[90%] 1500px:max-w-[85%] h-[auto] z-[10]"
         />
@@ -20,15 +24,14 @@ const Hero: FC<Props> = (props) => {
         <h2
           className={`${styles.textColorWhite}  text-[30px]  w-full 1000px:text-[60px] font-[600] font-Josefin py-2 1000px:leading-[75px] 1500px:!w-[55%] 1100px:!w-[78%]`}
         >
-          Improve Your Online Learning Experience Better Instantly
+          {data?.layout?.banner?.title}{" "}
         </h2>
         <br />
 
         <p
           className={`${styles.textColorWhite} font-Josefin font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[78%]`}
         >
-          We have 48k+ Online courses & 500K+ Online registered students. Find
-          your desired courses from them.
+          {data?.layout?.banner?.subTitle}{" "}
         </p>
         <br />
         <br />

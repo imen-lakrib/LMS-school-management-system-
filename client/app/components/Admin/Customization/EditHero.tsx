@@ -23,8 +23,8 @@ const EditHero: FC<Props> = () => {
   useEffect(() => {
     if (data) {
       setImage(data?.layout?.banner.image?.url);
-      setTitle(data?.layout?.banner.title);
-      setSubTitle(data?.layout?.banner.subTitle);
+      setTitle(data?.layout?.banner?.title);
+      setSubTitle(data?.layout?.banner?.subTitle);
     }
 
     if (isSuccess) {

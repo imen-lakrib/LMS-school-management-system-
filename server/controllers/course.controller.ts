@@ -141,32 +141,50 @@ export const getSingleCourse = CatchAsyncError(
 
 // get all courses --- everyone ---:
 
+// export const getAllCourses = CatchAsyncError(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       // redis
+//       const isCacheExist = await redis.get("allCourses");
+
+//       if (isCacheExist) {
+//         const courses = JSON.parse(isCacheExist);
+//         res.status(200).json({
+//           success: true,
+//           courses,
+//         });
+//       } else {
+//         const courses = await CourseModel.find().select(
+//           "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+//         );
+
+//         //save in cache redis
+//         await redis.set("allCourses", JSON.stringify(courses));
+
+//         res.status(200).json({
+//           success: true,
+//           courses,
+//         });
+//       }
+//     } catch (error: any) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   }
+// );
+
 export const getAllCourses = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // redis
-      const isCacheExist = await redis.get("allCourses");
+      const courses = await CourseModel.find().select(
+        "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+      );
 
-      if (isCacheExist) {
-        const courses = JSON.parse(isCacheExist);
-        res.status(200).json({
-          success: true,
-          courses,
-        });
-      } else {
-        const courses = await CourseModel.find().select(
-          "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
-        );
-
-        //save in cache redis
-        await redis.set("allCourses", JSON.stringify(courses));
-
-        res.status(200).json({
-          success: true,
-          courses,
-        });
-      }
+      res.status(200).json({
+        success: true,
+        courses,
+      });
     } catch (error: any) {
+      console.error("Error in getAllCourses:", error.message);
       return next(new ErrorHandler(error.message, 500));
     }
   }
