@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { MdOutlineOndemandVideo } from "react-icons/md";
 
 type Props = {
   data: any;
@@ -20,7 +21,7 @@ const CourseContentList: FC<Props> = ({
 
   // find unique video sections
   const videoSections: string[] = [
-    ...new Set<string>(data.map((item: any) => item.videoSection)),
+    ...new Set<string>(data?.map((item: any) => item.videoSection)),
   ];
 
   //total count of videos from previous sections
@@ -39,7 +40,7 @@ const CourseContentList: FC<Props> = ({
   return (
     <div
       className={`mt-[15px] w-full ${
-        !isDemo && "ml-[-30px] min-h-screen sticky top-24 left-0 z-30"
+        !isDemo && "ml-[-30px] sticky top-24 left-0 z-30"
       }`}
     >
       {videoSections.map((section: string, sectionIndex: number) => {
@@ -93,11 +94,44 @@ const CourseContentList: FC<Props> = ({
             </h5>
             <br />
 
-            {isSectionVisible && (<div className="w-full">
-                    {sectionVideos.map((item:any, index:number)=>{
-                        
-                    })}
-            </div>)}
+            {isSectionVisible && (
+              <div className="w-full">
+                {sectionVideos.map((item: any, index: number) => {
+                  const videoIndex: number = sectionStartIndex + index; // calculate the video index within the overal list
+                  const contentLength: number = item.videoLength / 60;
+                  return (
+                    <div
+                      className={`w-full ${
+                        videoIndex === activeVideo ? "bg-slate-800" : ""
+                      } cursor-pointer transition-all p-2`}
+                      key={item._id}
+                      onClick={() =>
+                        isDemo ? null : setActiveVideo(videoIndex)
+                      }
+                    >
+                      <div className="flex items-center">
+                        <div>
+                          <MdOutlineOndemandVideo
+                            size={25}
+                            className="mr-2"
+                            color="#1cdada"
+                          />
+                        </div>
+                        <h1 className="text-[18px] inline-block break-words text-black dark:text-white">
+                          {item.title}
+                        </h1>
+                      </div>
+                      <h5 className="pl-8 text-black dark:text-white">
+                        {item.videoLength > 60
+                          ? contentLength.toFixed(2)
+                          : item.videoLength}{" "}
+                        {item.videoLength > 60 ? "hours" : "minutes"}
+                      </h5>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         );
       })}
