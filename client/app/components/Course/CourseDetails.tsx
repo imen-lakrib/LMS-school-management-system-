@@ -10,10 +10,12 @@ import CoursePlayer from "../Admin/Course/CoursePlayer";
 import Link from "next/link";
 import { styles } from "@/app/styles/style";
 import CourseContentList from "./CourseContentList";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "../Payment/CheckoutForm";
 
-type Props = { data: any };
+type Props = { data: any; stripePromise: any; clientSecret: string };
 
-const CourseDetails: FC<Props> = ({ data }) => {
+const CourseDetails: FC<Props> = ({ data, stripePromise, clientSecret }) => {
   const { user } = useSelector((state: any) => state.auth);
   const [open, setOpen] = useState(false);
   const discountPercentage =
@@ -219,6 +221,13 @@ const CourseDetails: FC<Props> = ({ data }) => {
                   className="text-black cursor-pointer"
                   onClick={() => setOpen(false)}
                 />
+              </div>
+              <div className="w-full">
+                {stripePromise && clientSecret && (
+                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                    <CheckoutForm setOpen={setOpen} data={data} />
+                  </Elements>
+                )}
               </div>
             </div>
           </div>

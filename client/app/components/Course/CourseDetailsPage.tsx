@@ -38,7 +38,7 @@ const CourseDetailsPage: FC<Props> = ({ id }) => {
 
   useEffect(() => {
     if (paymentIntentData) {
-      setClientSecret(paymentIntentData?.clientSecret);
+      setClientSecret(paymentIntentData?.client_secret);
     }
   }, [paymentIntentData]);
 
@@ -60,7 +60,14 @@ const CourseDetailsPage: FC<Props> = ({ id }) => {
             setRoute={setRoute}
             route={route}
           />
-          <CourseDetails data={data.course} />
+          {stripePromise && (
+            <CourseDetails
+              data={data.course}
+              stripePromise={stripePromise}
+              clientSecret={clientSecret}
+            />
+          )}
+
           <Footer />
         </div>
       )}
