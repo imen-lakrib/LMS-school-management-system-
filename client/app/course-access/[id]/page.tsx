@@ -37,7 +37,7 @@ const Page: FC<Props> = ({ params }) => {
         <Loader />
       ) : (
         <div>
-          <CourseContent id={id} />
+          <CourseContent id={id} user={data.user} />
         </div>
       )}
     </>

@@ -1,4 +1,7 @@
-import { useGetCourseContentforUserQuery, useGetCourseDetailsQuery } from "@/redux/features/courses/coursesApi";
+import {
+  useGetCourseContentforUserQuery,
+  useGetCourseDetailsQuery,
+} from "@/redux/features/courses/coursesApi";
 import React, { FC, useEffect, useState } from "react";
 import { Loader } from "../Loader/Loader";
 import Heading from "@/app/utils/Heading";
@@ -10,67 +13,62 @@ import {
   useGetStripePublishableKeyQuery,
 } from "@/redux/features/orders/ordersApi";
 import { loadStripe } from "@stripe/stripe-js";
+import CourseContentMedia from "./CourseContentMedia";
+import CourseContentList from "./CourseContentList";
 
-type Props = { id: string };
+type Props = { id: string; user: any };
 
-const CourseContent: FC<Props> = ({ id }) => {
-  const { data, isLoading } = useGetCourseContentforUserQuery(id);
+const CourseContent: FC<Props> = ({ id, user }) => {
   const [stripePromise, setStripePromise] = useState<any>(null);
   const [clientSecret, setClientSecret] = useState("");
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState("Login");
+  const [activeItem, setActiveItem] = useState(2);
 
-  const [createPaymentIntent, { data: paymentIntentData, isError }] =
-    useCreatePaymentIntentMutation();
-
-  useEffect(() => {
-    if (config) {
-      const publishableKey = config?.publishableKey;
-      setStripePromise(loadStripe(publishableKey));
-    }
-
-    if (data) {
-      const amount = Math.round(data.course.price * 100);
-      createPaymentIntent(amount);
-    }
-  }, [config, data, createPaymentIntent]);
-
-  console.log("paymentIntentData", paymentIntentData);
-
-  useEffect(() => {
-    if (paymentIntentData) {
-      setClientSecret(paymentIntentData?.client_secret);
-    }
-  }, [paymentIntentData]);
+  const [activeVideo, setActiveVideo] = useState(0);
+  const { data: contentData, isLoading } = useGetCourseContentforUserQuery(id);
+  const data = contentData?.content;
+  useEffect(() => {}, []);
 
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : (
-        <div>
-          <Heading
-            title={` ${data?.course.name}- LMS`}
-            description="school management system"
-            keywords={data?.course?.tags}
-          />
+        <>
           <Header
             open={open}
             setOpen={setOpen}
-            activeItem={1}
             setRoute={setRoute}
+            activeItem={activeItem}
             route={route}
           />
-          {stripePromise && (
-            <CourseDetails
-              data={data.course}
-              stripePromise={stripePromise}
-              clientSecret={clientSecret}
+          <div className="w-full grid 800px:grid-cols-10">
+            <Heading
+              title={` ${data[activeVideo]?.title}- LMS`}
+              description="school management system"
+              keywords={data[activeVideo]?.tags}
             />
-          )}
 
-          <Footer />
-        </div>
+            <div className="col-span-7">
+              <CourseContentMedia
+                data={data}
+                id={id}
+                activeVideo={activeVideo}
+                setActiveVideo={setActiveVideo}
+                user={user}
+              />
+            </div>
+
+            <div className="hidden 800px:block 800px:col-span-3">
+              <CourseContentList
+                setActiveVideo={setActiveVideo}
+                data={data}
+                activeVideo={activeVideo}
+              />
+            </div>
+          </div>
+        </>
       )}
     </>
   );
