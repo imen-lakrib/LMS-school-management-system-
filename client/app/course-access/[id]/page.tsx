@@ -2,32 +2,45 @@
 
 import Header from "../../components/Header";
 import Heading from "../../utils/Heading";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { Loader } from "../../components/Loader/Loader";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import CourseContent from "@/app/components/Course/CourseContent";
 
 type Props = {
   params: any;
 };
 
 const Page: FC<Props> = ({ params }) => {
-  const [open, setOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState(3);
-  const [route, setRoute] = useState("Login");
   const id = params.id;
+  const { isLoading, error, data } = useLoadUserQuery(undefined, {});
+
+  useEffect(() => {
+    if (data) {
+      const isPurchased = data.user.courses.find(
+        (item: any) => item._id === id
+      );
+
+      if (!isPurchased) {
+        redirect("/");
+      }
+
+      if (error) {
+        redirect("/");
+      }
+    }
+  }, [data, error]);
   return (
-    <div>
-      <Heading
-        title={`Policy LMS`}
-        description="school management system"
-        keywords="school, management, system"
-      />
-      <Header
-        open={open}
-        setOpen={setOpen}
-        activeItem={activeItem}
-        setRoute={setRoute}
-        route={route}
-      />
-    </div>
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div>
+          <CourseContent id={id} />
+        </div>
+      )}
+    </>
   );
 };
 

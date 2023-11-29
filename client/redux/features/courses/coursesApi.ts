@@ -60,6 +60,15 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+
+    //7- get course data for purchased users
+    getCourseContentforUser: builder.query({
+      query: (id) => ({
+        url: `get-course-content/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -70,4 +79,5 @@ export const {
   useUpdateCouresMutation,
   useGetAllCoursesForEveryoneQuery,
   useGetCourseDetailsQuery,
+  useGetCourseContentforUserQuery,
 } = courseApi;
