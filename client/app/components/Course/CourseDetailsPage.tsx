@@ -16,13 +16,13 @@ type Props = { id: string };
 const CourseDetailsPage: FC<Props> = ({ id }) => {
   const { data, isLoading } = useGetCourseDetailsQuery(id);
   const { data: config } = useGetStripePublishableKeyQuery({});
-  const [createPaymentIntent, { data: paymentIntentData }] =
-    useCreatePaymentIntentMutation();
   const [stripePromise, setStripePromise] = useState<any>(null);
   const [clientSecret, setClientSecret] = useState("");
-
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState("Login");
+
+  const [createPaymentIntent, { data: paymentIntentData, isError }] =
+    useCreatePaymentIntentMutation();
 
   useEffect(() => {
     if (config) {
@@ -34,7 +34,9 @@ const CourseDetailsPage: FC<Props> = ({ id }) => {
       const amount = Math.round(data.course.price * 100);
       createPaymentIntent(amount);
     }
-  }, [config, data]);
+  }, [config, data, createPaymentIntent]);
+
+  console.log("paymentIntentData", paymentIntentData);
 
   useEffect(() => {
     if (paymentIntentData) {

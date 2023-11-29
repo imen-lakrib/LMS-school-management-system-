@@ -31,7 +31,7 @@ export const createOrder = CatchAsyncError(
             paymentIntentId
           );
 
-          if (paymentIntent.status !== "succeede") {
+          if (paymentIntent.status !== "succeeded") {
             return next(new ErrorHandler("Payment not authorized!", 400));
           }
         }
@@ -132,12 +132,16 @@ export const getOrders = CatchAsyncError(
     }
   }
 );
-// send stripe publishble key
+// send stripe publishable key
 export const sendStripePublishableKey = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).json({
-      publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-    });
+    try {
+      res.status(200).json({
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
   }
 );
 
@@ -145,7 +149,7 @@ export const sendStripePublishableKey = CatchAsyncError(
 export const newPayment = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const myPayment = await stripe.paymentIntents.created({
+      const myPayment = await stripe.paymentIntents.create({
         amount: req.body.amount,
         currency: "USD",
         metadata: {
