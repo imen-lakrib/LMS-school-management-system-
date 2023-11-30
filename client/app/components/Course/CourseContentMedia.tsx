@@ -10,14 +10,17 @@ import {
 import Image from "next/image";
 import toast from "react-hot-toast";
 import {
+  courseApi,
   useAddAnswerMutation,
   useAddNewQuestionMutation,
   useAddReviewMutation,
+  useGetCourseDetailsQuery,
 } from "@/redux/features/courses/coursesApi";
 import { AnimationDuration } from "recharts/types/util/types";
 import { format } from "timeago.js";
 import { BiMessage } from "react-icons/bi";
 import { MdVerified } from "react-icons/md";
+import Ratings from "@/app/utils/Ratings";
 
 type Props = {
   data: any;
@@ -203,8 +206,10 @@ const CourseContentMedia: FC<Props> = ({
   //
   const [answer, setAnswer] = useState("");
   const [questionId, setQuestionId] = useState("");
+  //
+  const { data: course } = useGetCourseDetailsQuery(id);
 
-  const isREviewExists = data?.reviews?.find(
+  const isREviewExists = course?.reviews?.find(
     (item: any) => item.user._id === user._id
   );
 
@@ -511,6 +516,47 @@ const CourseContentMedia: FC<Props> = ({
                 </div>
               </>
             )}
+            <br />
+
+            <div className="w-full h-[1px] bg-[#ffffff3b]">
+              <div className="w-full">
+                {(course?.reviews && [...course.reviews].reverse()).map(
+                  (item: any, index: number) => (
+                    <div key={index} className="w-full my-5">
+                      <div className="w-full flex">
+                        {/* <div className="w-[50px] h-[50px]">
+                          <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
+                            <h1 className="uppercase text-[18px]">
+                              {item.user.name.slice(0, 2)}
+                            </h1>
+                          </div>
+                        </div> */}
+                        <Image
+                          src={
+                            item?.user.avatar
+                              ? item?.user.avatar
+                              : "any default image"
+                          }
+                          alt=""
+                          width={50}
+                          height={50}
+                          className="w-[50px] h-[50px] rounded-full object-cover"
+                        />
+
+                        <div className="ml-2">
+                          <h1 className="text-[18px]">{item?.user.name}</h1>
+                          <Ratings rating={item?.rating} />
+                          <p>{item.comment}</p>
+                          <small className="text-[#ffffff83]">
+                            {!item.createdAt ? "" : format(item?.createdAt)}●
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
           </>
         </div>
       )}
