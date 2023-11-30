@@ -26,7 +26,13 @@ const CourseContent: FC<Props> = ({ id, user }) => {
   const [activeItem, setActiveItem] = useState(2);
 
   const [activeVideo, setActiveVideo] = useState(0);
-  const { data: contentData, isLoading } = useGetCourseContentforUserQuery(id);
+  const {
+    data: contentData,
+    isLoading,
+    refetch,
+  } = useGetCourseContentforUserQuery(id, {
+    refetchOnMountOrArgChange: true,
+  });
   const data = contentData?.content;
   useEffect(() => {}, []);
 
@@ -57,6 +63,7 @@ const CourseContent: FC<Props> = ({ id, user }) => {
                 activeVideo={activeVideo}
                 setActiveVideo={setActiveVideo}
                 user={user}
+                refetch={refetch}
               />
             </div>
 

@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import CoursePlayer from "../Admin/Course/CoursePlayer";
 import { styles } from "@/app/styles/style";
 import {
@@ -8,6 +8,8 @@ import {
   AiOutlineStar,
 } from "react-icons/ai";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import { useAddNewQuestionMutation } from "@/redux/features/courses/coursesApi";
 
 type Props = {
   data: any;
@@ -15,6 +17,7 @@ type Props = {
   activeVideo: number;
   setActiveVideo: (activeVideo: number) => void;
   user: any;
+  refetch: any;
 };
 
 const CourseContentMedia: FC<Props> = ({
@@ -23,6 +26,7 @@ const CourseContentMedia: FC<Props> = ({
   activeVideo,
   setActiveVideo,
   user,
+  refetch,
 }) => {
   const [question, setQuestion] = useState("");
   const [activeBar, setActiveBar] = useState(0);
@@ -32,6 +36,37 @@ const CourseContentMedia: FC<Props> = ({
   const isREviewExists = data?.reviews?.find(
     (item: any) => item.user._id === user._id
   );
+
+  const [
+    addNewQuestion,
+    { isSuccess, error, isLoading: questionCreateionLoading },
+  ] = useAddNewQuestionMutation({});
+
+  const handleQuestion = () => {
+    if (question.length === 0) {
+      toast.error("Question can't be empty");
+    } else {
+      addNewQuestion({
+        question,
+        courseId: id,
+        contentId: data[activeVideo]._id,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setQuestion("");
+      refetch();
+      toast.success("Question added successfully");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [isSuccess, error]);
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
@@ -132,7 +167,14 @@ const CourseContentMedia: FC<Props> = ({
           </div>
           <div className="w-full flex justify-end">
             <div
-              className={`${styles.button} !w-[120px] !h-[40px] text-[18px] mt-5 `}
+              className={`${
+                styles.button
+              } !w-[120px] !h-[40px] text-[18px] mt-5 ${
+                questionCreateionLoading
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+              } `}
+              onClick={questionCreateionLoading ? () => {} : handleQuestion}
             >
               {" "}
               Submit
