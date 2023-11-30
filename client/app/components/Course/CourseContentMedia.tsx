@@ -207,7 +207,14 @@ const CourseContentMedia: FC<Props> = ({
   const [answer, setAnswer] = useState("");
   const [questionId, setQuestionId] = useState("");
   //
-  const { data: course } = useGetCourseDetailsQuery(id);
+  const { data: courseData, refetch: courseRefetch } = useGetCourseDetailsQuery(
+    id,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
+
+  const course = courseData?.course;
 
   const isREviewExists = course?.reviews?.find(
     (item: any) => item.user._id === user._id
@@ -300,7 +307,7 @@ const CourseContentMedia: FC<Props> = ({
     if (reviewSuccess) {
       setReview("");
       setRating(1);
-      refetch();
+      courseRefetch();
       toast.success("Review added successfully");
     }
 

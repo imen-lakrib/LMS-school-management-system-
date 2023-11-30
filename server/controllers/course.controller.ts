@@ -412,6 +412,9 @@ export const addReview = CatchAsyncError(
 
       await course?.save();
 
+      // update redis
+      await redis.set(courseId, JSON.stringify(course), "EX", 604800);
+
       // manage notifications
 
       await NotificationModel.create({
