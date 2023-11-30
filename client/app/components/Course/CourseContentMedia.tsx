@@ -9,9 +9,14 @@ import {
 } from "react-icons/ai";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { useAddNewQuestionMutation } from "@/redux/features/courses/coursesApi";
+import {
+  useAddAnswerMutation,
+  useAddNewQuestionMutation,
+} from "@/redux/features/courses/coursesApi";
 import { AnimationDuration } from "recharts/types/util/types";
 import { format } from "timeago.js";
+import { BiMessage } from "react-icons/bi";
+import { MdVerified } from "react-icons/md";
 
 type Props = {
   data: any;
@@ -29,20 +34,32 @@ const CommentItem = ({
   item,
   answer,
   setAnswer,
+  setQuestionId,
   handleAnswerSubmit,
+  AnswerQuestionLoading,
 }: any) => {
+  const [replayActive, setReplayActive] = useState(false);
   return (
     <>
       <div className="my-4">
         <div className="flex mb-2">
-          <div className="w-[50px] h-[50px] ">
+          {/* <div className="w-[50px] h-[50px] ">
             <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
               <h1 className="uppercase text-[18px]">
                 {item?.user.name.slice(0, 2)}
               </h1>
             </div>
+          </div> */}
+          <div>
+            <Image
+              src={item?.user.avatar ? item?.user.avatar : "any default image"}
+              alt=""
+              width={50}
+              height={50}
+              className="w-[50px] h-[50px] rounded-full object-cover"
+            />
           </div>
-          <div className="pl-2">
+          <div className="pl-3 dark:text-white text-black">
             <h5 className="text-[20px]">{item?.user.name}</h5>
             <p>{item?.question}</p>
             <small className="text-[#ffffff83]">
@@ -50,6 +67,84 @@ const CommentItem = ({
             </small>
           </div>
         </div>
+        <div className="w-full flex">
+          <span
+            className="800px:pl-16 text-black dark:text-[#ffffff83] cursor-pointer mr-2"
+            onClick={() => {
+              setReplayActive(!replayActive), setQuestionId(item._id);
+            }}
+          >
+            {!replayActive
+              ? item.questionReplies.length !== 0
+                ? "All Replies"
+                : "Add Replay"
+              : "Hide Replies"}
+          </span>
+          <BiMessage
+            size={20}
+            className="cursor-pointer dark:text-[#ffffff83] text-white"
+          />
+          <span className="pl-1 mt-[-4px] cursor-pointer  dark:text-[#ffffff83] text-white">
+            {item.questionReplies.length}
+          </span>
+        </div>
+
+        {replayActive && (
+          <>
+            {item.questionReplies.map((item: any, index: number) => (
+              <div
+                key={index}
+                className="w-full 800px:ml-16 my-5 dark:text-[#000000] text-white"
+              >
+                <div>
+                  <Image
+                    src={
+                      item?.user.avatar
+                        ? item?.user.avatar
+                        : "any default image"
+                    }
+                    alt=""
+                    width={50}
+                    height={50}
+                    className="w-[50px] h-[50px] rounded-full object-cover"
+                  />
+                </div>
+
+                <div className="pl-2 dark:text-white text-black">
+                  <div className="flex items-center">
+                    <h5 className="text-[20px]">{item?.user.name}</h5>
+                    <MdVerified className="text-[#50c750] ml-2 text-[20px]" />
+                  </div>
+                  <p>{item?.answer}</p>
+                  <small className="text-[#ffffff83]">
+                    {!item.createdAt ? "" : format(item?.createdAt)}●
+                  </small>
+                </div>
+              </div>
+            ))}
+
+            <>
+              <div className="w-full flex relative dark:text-[#000000] text-white">
+                <input
+                  type="text"
+                  placeholder="Enter your Answer .."
+                  value={answer}
+                  onChange={(e: any) => setAnswer(e.target.value)}
+                  className="block 800px:ml-12 mt-2 outline-none bg-transparent border-b dark:text-[#000000] text-white border-black dark:border-white p-[5px] w-[95%]"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-0 bottom-1"
+                  onClick={handleAnswerSubmit}
+                  disabled={answer === "" || AnswerQuestionLoading}
+                >
+                  Submit
+                </button>
+              </div>
+              <br />
+            </>
+          </>
+        )}
       </div>
     </>
   );
@@ -61,8 +156,9 @@ const CommentReplay = ({
   answer,
   setAnswer,
   user,
-  setAnswerId,
+  setQuestionId,
   handleAnswerSubmit,
+  AnswerQuestionLoading,
 }: any) => {
   return (
     <>
@@ -77,7 +173,9 @@ const CommentReplay = ({
               index={index}
               answer={answer}
               setAnswer={setAnswer}
+              setQuestionId={setQuestionId}
               handleAnswerSubmit={handleAnswerSubmit}
+              AnswerQuestionLoading={AnswerQuestionLoading}
             />
           )
         )}
@@ -101,7 +199,7 @@ const CourseContentMedia: FC<Props> = ({
 
   //
   const [answer, setAnswer] = useState("");
-  const [answerId, setAnswerId] = useState("");
+  const [questionId, setQuestionId] = useState("");
 
   const isREviewExists = data?.reviews?.find(
     (item: any) => item.user._id === user._id
@@ -124,7 +222,22 @@ const CourseContentMedia: FC<Props> = ({
     }
   };
 
-  const handleAnswerSubmit = () => {};
+  const [
+    addAnswer,
+    {
+      isSuccess: successAnswer,
+      error: errorAnswer,
+      isLoading: AnswerQuestionLoading,
+    },
+  ] = useAddAnswerMutation();
+  const handleAnswerSubmit = () => {
+    addAnswer({
+      answer,
+      questionId: questionId,
+      courseId: id,
+      contentId: data[activeVideo]._id,
+    });
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -132,13 +245,27 @@ const CourseContentMedia: FC<Props> = ({
       refetch();
       toast.success("Question added successfully");
     }
+
+    if (successAnswer) {
+      setAnswer("");
+      refetch();
+      toast.success("Answer added successfully");
+    }
+
     if (error) {
       if ("data" in error) {
         const errorMessage = error as any;
         toast.error(errorMessage.data.message);
       }
     }
-  }, [isSuccess, error]);
+
+    if (errorAnswer) {
+      if ("data" in errorAnswer) {
+        const errorMessage = errorAnswer as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [isSuccess, error, successAnswer, errorAnswer]);
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
@@ -267,7 +394,8 @@ const CourseContentMedia: FC<Props> = ({
               setAnswer={setAnswer}
               handleAnswerSubmit={handleAnswerSubmit}
               user={user}
-              setAnswerId={setAnswerId}
+              setQuestionId={setQuestionId}
+              AnswerQuestionLoading={AnswerQuestionLoading}
             />
           </div>
         </>

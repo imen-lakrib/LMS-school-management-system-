@@ -13,6 +13,7 @@ import CourseContentList from "./CourseContentList";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Payment/CheckoutForm";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import toast from "react-hot-toast";
 
 type Props = { data: any; stripePromise: any; clientSecret: string };
 
@@ -27,7 +28,7 @@ const CourseDetails: FC<Props> = ({ data, stripePromise, clientSecret }) => {
   const discountPercentagePrice = discountPercentage.toFixed(0);
   const isPurchased =
     user && user?.courses?.find((item: any) => item._id === data._id);
-  const handleOrder = (e: any) => {
+  const handleOrder = () => {
     setOpen(true);
   };
   return (

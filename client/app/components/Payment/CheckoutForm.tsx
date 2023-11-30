@@ -10,7 +10,6 @@ import { redirect } from "next/navigation";
 import React, { FC, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-
 type Props = { setOpen: any; data: any };
 
 const CheckoutForm: FC<Props> = ({ data, setOpen }) => {
@@ -46,16 +45,16 @@ const CheckoutForm: FC<Props> = ({ data, setOpen }) => {
   useEffect(() => {
     if (orderData) {
       setLoadUser(true);
-      redirect(`/course-access/${data._id}`)
+      redirect(`/course-access/${data._id}`);
     }
 
-    if(error){
-      if("data" in error){
-        const errorMessage = error as any,
-        toast.error(errorMessage.data.message)
-      }
+    // if(error){
+    //   if("data" in error){
+    //     const errorMessage = error as any,
+    //     toast.error(errorMessage.data.message)
+    //   }
 
-    }
+    // }
   }, [orderData, error]);
 
   return (
@@ -63,7 +62,7 @@ const CheckoutForm: FC<Props> = ({ data, setOpen }) => {
       <LinkAuthenticationElement id="link-authentication-element" />
       <PaymentElement id="payment-element" />
       <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">{isLoading ? "Paying" : "Pay now"}</span>
+        <span className="text-black" id="button-text">{isLoading ? "Paying" : "Pay now"}</span>
       </button>
       {/* Show any error or success messages */}
       {message && (
