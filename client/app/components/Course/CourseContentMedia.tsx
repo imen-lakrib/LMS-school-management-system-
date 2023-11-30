@@ -10,6 +10,8 @@ import {
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useAddNewQuestionMutation } from "@/redux/features/courses/coursesApi";
+import { AnimationDuration } from "recharts/types/util/types";
+import { format } from "timeago.js";
 
 type Props = {
   data: any;
@@ -18,6 +20,70 @@ type Props = {
   setActiveVideo: (activeVideo: number) => void;
   user: any;
   refetch: any;
+};
+
+const CommentItem = ({
+  key,
+  data,
+  activeVideo,
+  item,
+  answer,
+  setAnswer,
+  handleAnswerSubmit,
+}: any) => {
+  return (
+    <>
+      <div className="my-4">
+        <div className="flex mb-2">
+          <div className="w-[50px] h-[50px] ">
+            <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
+              <h1 className="uppercase text-[18px]">
+                {item?.user.name.slice(0, 2)}
+              </h1>
+            </div>
+          </div>
+          <div className="pl-2">
+            <h5 className="text-[20px]">{item?.user.name}</h5>
+            <p>{item?.question}</p>
+            <small className="text-[#ffffff83]">
+              {!item.createdAt ? "" : format(item?.createdAt)}●
+            </small>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const CommentReplay = ({
+  data,
+  activeVideo,
+  answer,
+  setAnswer,
+  user,
+  setAnswerId,
+  handleAnswerSubmit,
+}: any) => {
+  return (
+    <>
+      <div className="w-full my-3">
+        {data[activeVideo].questions.map(
+          (item: AnimationDuration, index: any) => (
+            <CommentItem
+              key={index}
+              data={data}
+              activeVideo={activeVideo}
+              item={item}
+              index={index}
+              answer={answer}
+              setAnswer={setAnswer}
+              handleAnswerSubmit={handleAnswerSubmit}
+            />
+          )
+        )}
+      </div>
+    </>
+  );
 };
 
 const CourseContentMedia: FC<Props> = ({
@@ -32,6 +98,10 @@ const CourseContentMedia: FC<Props> = ({
   const [activeBar, setActiveBar] = useState(0);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+
+  //
+  const [answer, setAnswer] = useState("");
+  const [answerId, setAnswerId] = useState("");
 
   const isREviewExists = data?.reviews?.find(
     (item: any) => item.user._id === user._id
@@ -53,6 +123,8 @@ const CourseContentMedia: FC<Props> = ({
       });
     }
   };
+
+  const handleAnswerSubmit = () => {};
 
   useEffect(() => {
     if (isSuccess) {
@@ -186,7 +258,18 @@ const CourseContentMedia: FC<Props> = ({
 
           <div className="w-full h-[1px] bg-[#ffffff3b]"></div>
 
-          <div>{/* question replay component */}</div>
+          <div>
+            {/* question replay component */}
+            <CommentReplay
+              data={data}
+              activeVideo={activeVideo}
+              answer={answer}
+              setAnswer={setAnswer}
+              handleAnswerSubmit={handleAnswerSubmit}
+              user={user}
+              setAnswerId={setAnswerId}
+            />
+          </div>
         </>
       )}
 
