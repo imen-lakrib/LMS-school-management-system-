@@ -14,6 +14,7 @@ import {
   useAddAnswerMutation,
   useAddNewQuestionMutation,
   useAddReviewMutation,
+  useAddReviewReplayMutation,
   useGetCourseDetailsQuery,
 } from "@/redux/features/courses/coursesApi";
 import { AnimationDuration } from "recharts/types/util/types";
@@ -204,6 +205,8 @@ const CourseContentMedia: FC<Props> = ({
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [isReviewReplay, setIsReviewReplay] = useState(false);
+  const [replay, setReplay] = useState("");
+  const [reviewId, setReviewId] = useState("");
 
   //
   const [answer, setAnswer] = useState("");
@@ -278,6 +281,27 @@ const CourseContentMedia: FC<Props> = ({
     }
   };
 
+  //replay review
+  const [
+    addReviewReplay,
+    {
+      isSuccess: successReplay,
+      error: errorReplay,
+      isLoading: ReplayReviewLoading,
+    },
+  ] = useAddReviewReplayMutation();
+  const handleReplaySubmit = () => {
+    if (replay === "") {
+      toast.error("replay can not be empty");
+    } else {
+      addReviewReplay({
+        comment: replay,
+        courseId: id,
+        reviewId,
+      });
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
       setQuestion("");
@@ -319,6 +343,20 @@ const CourseContentMedia: FC<Props> = ({
         toast.error(errorMessage.data.message);
       }
     }
+
+    //
+    if (successReplay) {
+      setReplay("");
+      courseRefetch();
+      toast.success("Replay added successfully");
+    }
+
+    if (errorReplay) {
+      if ("data" in errorReplay) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
   }, [
     isSuccess,
     error,
@@ -326,6 +364,8 @@ const CourseContentMedia: FC<Props> = ({
     errorAnswer,
     reviewError,
     reviewSuccess,
+    errorReplay,
+    successReplay,
   ]);
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
@@ -564,18 +604,32 @@ const CourseContentMedia: FC<Props> = ({
                       {user.role === "admin" && (
                         <span
                           className={`${styles.label} !ml-10 cursor-pointer `}
-                          onClick={() => setIsReviewReplay(true)}
+                          onClick={() => {
+                            setIsReviewReplay(true), setReviewId(item._id);
+                          }}
                         >
                           Add Replay{" "}
                         </span>
                       )}
 
                       {isReviewReplay && (
-                        <input
-                          type="text"
-                          placeholder="Enter your Replay .."
-                          className={`${styles.input} !border-[0px] !border-b rounded-none w-[90%] ml-[10%] `}
-                        />
+                        <div className="w-full flex relative dark:text-[#000000] text-white">
+                          <input
+                            type="text"
+                            placeholder="Enter your Answer .."
+                            value={replay}
+                            onChange={(e: any) => setReplay(e.target.value)}
+                            className="block 800px:ml-12 mt-2 outline-none bg-transparent border-b dark:text-[#000000] text-white border-black dark:border-white p-[5px] w-[95%]"
+                          />
+                          <button
+                            type="submit"
+                            className="absolute right-0 bottom-1"
+                            onClick={handleReplaySubmit}
+                            disabled={replay === "" || ReplayReviewLoading}
+                          >
+                            Submit
+                          </button>
+                        </div>
                       )}
                     </div>
                   )
