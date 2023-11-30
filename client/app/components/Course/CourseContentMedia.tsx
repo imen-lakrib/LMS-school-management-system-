@@ -200,8 +200,10 @@ const CourseContentMedia: FC<Props> = ({
 }) => {
   const [question, setQuestion] = useState("");
   const [activeBar, setActiveBar] = useState(0);
+  //
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+  const [isReviewReplay, setIsReviewReplay] = useState(false);
 
   //
   const [answer, setAnswer] = useState("");
@@ -559,6 +561,22 @@ const CourseContentMedia: FC<Props> = ({
                           </small>
                         </div>
                       </div>
+                      {user.role === "admin" && (
+                        <span
+                          className={`${styles.label} !ml-10 cursor-pointer `}
+                          onClick={() => setIsReviewReplay(true)}
+                        >
+                          Add Replay{" "}
+                        </span>
+                      )}
+
+                      {isReviewReplay && (
+                        <input
+                          type="text"
+                          placeholder="Enter your Replay .."
+                          className={`${styles.input} !border-[0px] !border-b rounded-none w-[90%] ml-[10%] `}
+                        />
+                      )}
                     </div>
                   )
                 )}
