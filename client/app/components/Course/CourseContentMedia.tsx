@@ -291,14 +291,16 @@ const CourseContentMedia: FC<Props> = ({
     },
   ] = useAddReviewReplayMutation();
   const handleReplaySubmit = () => {
-    if (replay === "") {
-      toast.error("replay can not be empty");
-    } else {
-      addReviewReplay({
-        comment: replay,
-        courseId: id,
-        reviewId,
-      });
+    if (!ReplayReviewLoading) {
+      if (replay === "") {
+        toast.error("replay can not be empty");
+      } else {
+        addReviewReplay({
+          comment: replay,
+          courseId: id,
+          reviewId,
+        });
+      }
     }
   };
 
@@ -631,6 +633,35 @@ const CourseContentMedia: FC<Props> = ({
                           </button>
                         </div>
                       )}
+
+                      {item.commentReplies.map((i: any, index: number) => (
+                        <div
+                          key={index}
+                          className="pl-2 dark:text-white text-black"
+                        >
+                          <Image
+                            src={
+                              i?.user.avatar
+                                ? i?.user.avatar
+                                : "any default image"
+                            }
+                            alt=""
+                            width={50}
+                            height={50}
+                            className="w-[50px] h-[50px] rounded-full object-cover"
+                          />
+                          <div className="flex items-center">
+                            <h5 className="text-[20px]">{i?.user.name}</h5>
+                            {i?.user.role === "admin" && (
+                              <MdVerified className="text-[#50c750] ml-2 text-[20px]" />
+                            )}
+                          </div>
+                          <p>{i?.comment}</p>
+                          <small className="text-[#ffffff83]">
+                            {!i.createdAt ? "" : format(i?.createdAt)}●
+                          </small>
+                        </div>
+                      ))}
                     </div>
                   )
                 )}

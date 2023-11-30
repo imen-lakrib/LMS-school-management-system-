@@ -478,6 +478,9 @@ export const addReplayToReview = CatchAsyncError(
       //save the updated course:
       await course?.save();
 
+      await redis.set(courseId, JSON.stringify(course), "EX", 604800);
+
+
       res.status(200).json({
         success: true,
         course,
