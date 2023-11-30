@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import {
   useAddAnswerMutation,
   useAddNewQuestionMutation,
+  useAddReviewMutation,
 } from "@/redux/features/courses/coursesApi";
 import { AnimationDuration } from "recharts/types/util/types";
 import { format } from "timeago.js";
@@ -113,7 +114,9 @@ const CommentItem = ({
                 <div className="pl-2 dark:text-white text-black">
                   <div className="flex items-center">
                     <h5 className="text-[20px]">{item?.user.name}</h5>
-                    <MdVerified className="text-[#50c750] ml-2 text-[20px]" />
+                    {item?.user.role === "admin" && (
+                      <MdVerified className="text-[#50c750] ml-2 text-[20px]" />
+                    )}
                   </div>
                   <p>{item?.answer}</p>
                   <small className="text-[#ffffff83]">
@@ -205,6 +208,7 @@ const CourseContentMedia: FC<Props> = ({
     (item: any) => item.user._id === user._id
   );
 
+  //add question
   const [
     addNewQuestion,
     { isSuccess, error, isLoading: questionCreateionLoading },
@@ -221,6 +225,8 @@ const CourseContentMedia: FC<Props> = ({
       });
     }
   };
+
+  //answer question
 
   const [
     addAnswer,
@@ -239,19 +245,31 @@ const CourseContentMedia: FC<Props> = ({
     });
   };
 
+  //add Review
+
+  const [
+    addReview,
+    { isSuccess: reviewSuccess, error: reviewError, isLoading: ReviewLoading },
+  ] = useAddReviewMutation();
+
+  const handleReviewSubmit = async () => {
+    if (review.length === 0) {
+      toast.error("Review can't be empty");
+    } else {
+      addReview({
+        review,
+        rating,
+        courseId: id,
+      });
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
       setQuestion("");
       refetch();
       toast.success("Question added successfully");
     }
-
-    if (successAnswer) {
-      setAnswer("");
-      refetch();
-      toast.success("Answer added successfully");
-    }
-
     if (error) {
       if ("data" in error) {
         const errorMessage = error as any;
@@ -259,13 +277,42 @@ const CourseContentMedia: FC<Props> = ({
       }
     }
 
+    //
+    if (successAnswer) {
+      setAnswer("");
+      refetch();
+      toast.success("Answer added successfully");
+    }
+
     if (errorAnswer) {
       if ("data" in errorAnswer) {
-        const errorMessage = errorAnswer as any;
+        const errorMessage = error as any;
         toast.error(errorMessage.data.message);
       }
     }
-  }, [isSuccess, error, successAnswer, errorAnswer]);
+
+    //
+    if (reviewSuccess) {
+      setReview("");
+      setRating(1);
+      refetch();
+      toast.success("Review added successfully");
+    }
+
+    if (reviewError) {
+      if ("data" in reviewError) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [
+    isSuccess,
+    error,
+    successAnswer,
+    errorAnswer,
+    reviewError,
+    reviewSuccess,
+  ]);
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
@@ -456,6 +503,7 @@ const CourseContentMedia: FC<Props> = ({
                 <div className="w-full flex justify-end">
                   <div
                     className={`${styles.button} !w-[120px] !h-[40px] text-[18px] mt-5 800px:mr-0 mr-2 `}
+                    onClick={ReviewLoading ? () => {} : handleReviewSubmit}
                   >
                     {" "}
                     Submit
