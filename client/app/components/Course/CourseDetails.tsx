@@ -1,5 +1,5 @@
 import Ratings from "@/app/utils/Ratings";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   IoMdCheckmarkCircleOutline,
   IoMdCloseCircleOutline,
@@ -17,12 +17,26 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { MdVerified } from "react-icons/md";
 
-type Props = { data: any; stripePromise: any; clientSecret: string };
+type Props = {
+  data: any;
+  stripePromise: any;
+  clientSecret: string;
+  setRoute: any;
+  setOpen: any;
+};
 
-const CourseDetails: FC<Props> = ({ data, stripePromise, clientSecret }) => {
+const CourseDetails: FC<Props> = ({
+  data,
+  stripePromise,
+  clientSecret,
+  setRoute,
+  setOpen: openAuthModal,
+}) => {
   // const { user } = useSelector((state: any) => state.auth);
   const { data: userData } = useLoadUserQuery(undefined, {});
-  const user = userData?.user;
+  const [user, setUser] = useState<any>();
+
+  // const user = userData?.user;
   const [open, setOpen] = useState(false);
   const discountPercentage =
     ((data?.estimatedPrice - data.price) / data?.estimatedPrice) * 100;
@@ -30,8 +44,19 @@ const CourseDetails: FC<Props> = ({ data, stripePromise, clientSecret }) => {
   const discountPercentagePrice = discountPercentage.toFixed(0);
   const isPurchased =
     user && user?.courses?.find((item: any) => item._id === data._id);
-  const handleOrder = () => {
-    setOpen(true);
+
+  useEffect(() => {
+    
+    setUser(userData?.user);
+  }, [userData]);
+
+  const handleOrder = (e: any) => {
+    if (user) {
+      setOpen(true);
+    } else {
+      setRoute("Login");
+      openAuthModal(true);
+    }
   };
   return (
     <div>

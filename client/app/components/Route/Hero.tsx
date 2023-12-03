@@ -2,12 +2,22 @@ import { styles } from "@/app/styles/style";
 import { useGetLayoutQuery } from "@/redux/features/layout/layoutApi";
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { Loader } from "../Loader/Loader";
+import { useRouter } from "next/navigation";
 type Props = {};
 const Hero: FC<Props> = (props) => {
   const { data, isLoading } = useGetLayoutQuery("Banner", {});
+  const [search, setSearch] = useState("");
+  const router = useRouter();
+  const handleSearch = () => {
+    if (search === "") {
+      return;
+    } else {
+      router.push(`/courses?title=${search}`);
+    }
+  };
   return (
     <>
       {isLoading ? (
@@ -43,10 +53,15 @@ const Hero: FC<Props> = (props) => {
             <div className="1500px:w-[55%] 1100px:w-[78%] w-[90%] h-[50px] bg-transparent relative">
               <input
                 type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search Courses..."
                 className={`bg-transparent border dark:border-none dark:bg-[#575757] dark:placeholder-text-[#ffffffdd] rounded-[5px] p-2 w-full h-full outline-none ${styles.textColorWhite} text-[20px] font-[500] font-Josefin `}
               />
-              <div className="absolute flex items-center justify-center w-[50px] cursor-pointer h-[50px] right-0 top-0 bg-[#39c1f3] rounded-r-[5px]">
+              <div
+                className="absolute flex items-center justify-center w-[50px] cursor-pointer h-[50px] right-0 top-0 bg-[#39c1f3] rounded-r-[5px]"
+                onClick={handleSearch}
+              >
                 <BiSearch className="text-white" size={30} />
               </div>
             </div>
