@@ -2,7 +2,10 @@
 import React, { FC, useState } from "react";
 import ThemeSwitcher from "../utils/ThemeSwitcher";
 import { NotificationImportant } from "@mui/icons-material";
-
+//socket
+import socketIO from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLICK_SOCKET_SERVER_URI || "";
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 type Props = {
   open?: boolean;
   setOpen?: any;
