@@ -12,6 +12,7 @@ import sendEmail from "../utils/sendMail";
 import { redis } from "../utils/redis";
 import { createCourse, getAllCoursesService } from "../services/course.service";
 import mongoose from "mongoose";
+
 import NotificationModel from "../models/notification.model";
 import axios from "axios";
 require("dotenv").config();
@@ -479,7 +480,6 @@ export const addReplayToReview = CatchAsyncError(
       await course?.save();
 
       await redis.set(courseId, JSON.stringify(course), "EX", 604800);
-
 
       res.status(200).json({
         success: true,
