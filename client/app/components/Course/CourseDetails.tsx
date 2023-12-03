@@ -46,7 +46,6 @@ const CourseDetails: FC<Props> = ({
     user && user?.courses?.find((item: any) => item._id === data._id);
 
   useEffect(() => {
-    
     setUser(userData?.user);
   }, [userData]);
 
@@ -296,7 +295,7 @@ const CourseDetails: FC<Props> = ({
               <div className="w-full">
                 {stripePromise && clientSecret && (
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <CheckoutForm setOpen={setOpen} data={data} />
+                    <CheckoutForm setOpen={setOpen} data={data} user={user} />
                   </Elements>
                 )}
               </div>

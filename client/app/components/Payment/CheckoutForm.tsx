@@ -7,12 +7,17 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { redirect } from "next/navigation";
+import { userAgent } from "next/server";
 import React, { FC, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+//socket
+import socketIO from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLICK_SOCKET_SERVER_URI || "";
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
-type Props = { setOpen: any; data: any };
+type Props = { setOpen: any; data: any; user: any };
 
-const CheckoutForm: FC<Props> = ({ data, setOpen }) => {
+const CheckoutForm: FC<Props> = ({ data, setOpen, user }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState<any>("");
@@ -20,7 +25,9 @@ const CheckoutForm: FC<Props> = ({ data, setOpen }) => {
 
   const [loadUser, setLoadUser] = useState(false);
 
-  const {} = useLoadUserQuery({ skip: loadUser ? false : true });
+  const {} = useLoadUserQuery({
+    skip: loadUser ? false : true,
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
@@ -45,6 +52,13 @@ const CheckoutForm: FC<Props> = ({ data, setOpen }) => {
   useEffect(() => {
     if (orderData) {
       setLoadUser(true);
+      //connect socket server
+      socketId.emit("notification", {
+        title: "New Order",
+        message: `you heve a new order from ${data.course.name} `,
+        userId: user._id,
+      });
+
       redirect(`/course-access/${data._id}`);
     }
 
@@ -62,7 +76,9 @@ const CheckoutForm: FC<Props> = ({ data, setOpen }) => {
       <LinkAuthenticationElement id="link-authentication-element" />
       <PaymentElement id="payment-element" />
       <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span className="text-black" id="button-text">{isLoading ? "Paying" : "Pay now"}</span>
+        <span className="text-black" id="button-text">
+          {isLoading ? "Paying" : "Pay now"}
+        </span>
       </button>
       {/* Show any error or success messages */}
       {message && (
