@@ -22,6 +22,10 @@ import { format } from "timeago.js";
 import { BiMessage } from "react-icons/bi";
 import { MdVerified } from "react-icons/md";
 import Ratings from "@/app/utils/Ratings";
+//socket
+import socketIO from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLICK_SOCKET_SERVER_URI || "";
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 type Props = {
   data: any;
@@ -309,6 +313,12 @@ const CourseContentMedia: FC<Props> = ({
       setQuestion("");
       refetch();
       toast.success("Question added successfully");
+      //connect socket server
+      socketId.emit("notification", {
+        title: "New Question Received",
+        message: `you heve a new question from ${data[activeVideo].title} `,
+        userId: user._id,
+      });
     }
     if (error) {
       if ("data" in error) {
@@ -322,6 +332,14 @@ const CourseContentMedia: FC<Props> = ({
       setAnswer("");
       refetch();
       toast.success("Answer added successfully");
+
+      if (user.role !== "admin") {
+        socketId.emit("notification", {
+          title: "New REplay Received",
+          message: `you heve a new question replay in  ${data[activeVideo].title} `,
+          userId: user._id,
+        });
+      }
     }
 
     if (errorAnswer) {
@@ -337,6 +355,11 @@ const CourseContentMedia: FC<Props> = ({
       setRating(1);
       courseRefetch();
       toast.success("Review added successfully");
+      socketId.emit("notification", {
+        title: "New review Received",
+        message: `you heve a new review from ${data[activeVideo].title} `,
+        userId: user._id,
+      });
     }
 
     if (reviewError) {
