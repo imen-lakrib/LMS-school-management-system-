@@ -4,7 +4,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import { IOrder } from "../models/order.model";
 import userModel from "../models/user.model";
-import CourseModel from "../models/course.model";
+import CourseModel, { ICourse } from "../models/course.model";
 import NotificationModel from "../models/notification.model";
 
 import ejs from "ejs";
@@ -52,7 +52,7 @@ export const createOrder = CatchAsyncError(
       }
 
       //search for course
-      const course = await CourseModel.findById(courseId);
+      const course: ICourse | null = await CourseModel.findById(courseId);
 
       if (!course) {
         return next(new ErrorHandler("Course not found!", 400));
@@ -111,8 +111,7 @@ export const createOrder = CatchAsyncError(
       });
 
       // increase purchased by 1:
-      course.purchased ? (course.purchased += 1) : course.purchased;
-
+      course.purchased += 1;
       await course.save();
 
       newOrder(data, res, next);
