@@ -19,6 +19,7 @@ import {
 } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
 import { styles } from "../styles/style";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -30,7 +31,12 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
 
-  const { user } = useSelector((state: any) => state.auth);
+  // const { user } = useSelector((state: any) => state.auth);
+  const {
+    data: userData,
+    isLoading,
+    refetch,
+  } = useLoadUserQuery(undefined, {});
   const { data } = useSession();
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
   const [logout, setLogout] = useState(false);
@@ -41,24 +47,26 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
     skip: !logout,
   });
   useEffect(() => {
-    if (!user) {
-      if (data) {
-        socialAuth({
-          email: data?.user?.email,
-          name: data?.user?.name,
-          avatar: data?.user?.image,
-        });
+    if (!isLoading) {
+      if (!userData) {
+        if (data) {
+          socialAuth({
+            email: data?.user?.email,
+            name: data?.user?.name,
+            avatar: data?.user?.image,
+          });
+        }
+      }
+      if (data === null) {
+        if (isSuccess) {
+          toast.success("Login Success!");
+        }
+      }
+      if (data === null && !isLoading && !userData) {
+        setLogout(true);
       }
     }
-    if (data === null) {
-      if (isSuccess) {
-        toast.success("Login Success!");
-      }
-    }
-    if (data === null) {
-      setLogout(true);
-    }
-  }, [data, user]);
+  }, [data, userData, isLoading]);
 
   if (typeof window !== "undefined") {
     // for sticky
@@ -110,10 +118,12 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                 />
               </div>
 
-              {user ? (
+              {userData ? (
                 <Link className="hidden 800px:block" href={"/profile"}>
                   <Image
-                    src={user.avatar ? user.avatar.url : avatar}
+                    src={
+                      userData.user.avatar ? userData.user.avatar.url : avatar
+                    }
                     alt="Your Alt Text"
                     className=" hidden 800px:block rounded-full  ml-[20px]  1500px:w-[10] 1100px:w-[8] w-[30px] h-[30px] "
                     width={30}
@@ -145,10 +155,12 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               <NavItems activeItem={activeItem} isMobile={true} />
 
               <div className="px-5">
-                {user ? (
+                {userData ? (
                   <Link href={"/profile"}>
                     <Image
-                      src={user.avatar ? user.avatar.url : avatar}
+                      src={
+                        userData.user.avatar ? userData.user.avatar.url : avatar
+                      }
                       alt="Your Alt Text"
                       className="rounded-full  1500px:w-[12] 1100px:w-[8] w-[30px]  h-[30px] "
                       width={30}
@@ -189,6 +201,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               setRoute={setRoute}
               activeItem={activeItem}
               component={Login}
+              refetch={refetch}
             />
           )}
         </>

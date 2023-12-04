@@ -61,7 +61,11 @@ const CommentItem = ({
           </div> */}
           <div>
             <Image
-              src={item?.user.avatar ? item?.user.avatar : "any default image"}
+              src={
+                item?.user.avatar
+                  ? item?.user.avatar
+                  : "/client/public/assets/img.png"
+              }
               alt=""
               width={50}
               height={50}
@@ -110,7 +114,7 @@ const CommentItem = ({
                     src={
                       item?.user.avatar
                         ? item?.user.avatar
-                        : "any default image"
+                        : "/client/public/assets/img.png"
                     }
                     alt=""
                     width={50}
@@ -473,7 +477,7 @@ const CourseContentMedia: FC<Props> = ({
         <>
           <div className="flex w-full">
             <Image
-              src={user.avatar ? user.avatar : "any default image"}
+              src={user.avatar ? user.avatar : "/client/public/assets/img.png"}
               alt=""
               width={50}
               height={50}
@@ -534,7 +538,11 @@ const CourseContentMedia: FC<Props> = ({
               <>
                 <div className="flex w-full">
                   <Image
-                    src={user.avatar ? user.avatar : "any default image"}
+                    src={
+                      user.avatar
+                        ? user.avatar
+                        : "/client/public/assets/img.png"
+                    }
                     alt=""
                     width={50}
                     height={50}
@@ -609,7 +617,7 @@ const CourseContentMedia: FC<Props> = ({
                           src={
                             item?.user.avatar
                               ? item?.user.avatar
-                              : "any default image"
+                              : "/client/public/assets/img.png"
                           }
                           alt=""
                           width={50}
@@ -666,7 +674,7 @@ const CourseContentMedia: FC<Props> = ({
                             src={
                               i?.user.avatar
                                 ? i?.user.avatar
-                                : "any default image"
+                                : "/client/public/assets/img.png"
                             }
                             alt=""
                             width={50}

@@ -8,6 +8,7 @@ type Props = {
   activeItem: any;
   component: any;
   setRoute?: (route: string) => void;
+  refetch?: any;
 };
 
 const CustomModal: FC<Props> = ({
@@ -16,6 +17,7 @@ const CustomModal: FC<Props> = ({
   activeItem,
   component: Component,
   setRoute,
+  refetch,
 }) => {
   return (
     <Modal
@@ -36,7 +38,7 @@ const CustomModal: FC<Props> = ({
             margin: "auto", // This will center the content inside the box
           }}
         >
-          <Component setOpen={setOpen} setRoute={setRoute} />
+          <Component setOpen={setOpen} setRoute={setRoute} refetch={refetch} />
         </div>
       </Box>
     </Modal>

@@ -55,7 +55,7 @@ const CheckoutForm: FC<Props> = ({ data, setOpen, user }) => {
       //connect socket server
       socketId.emit("notification", {
         title: "New Order",
-        message: `you heve a new order from ${data.course.name} `,
+        message: `you heve a new order from ${data.name} `,
         userId: user._id,
       });
 

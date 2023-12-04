@@ -17,6 +17,7 @@ import { redirect } from "next/navigation";
 type Props = {
   setRoute: (route: string) => void;
   setOpen: (open: boolean) => void;
+  refetch?: any;
 };
 
 const schema = Yup.object().shape({
@@ -25,7 +26,7 @@ const schema = Yup.object().shape({
     .required("Please enter your email"),
   password: Yup.string().required("Please enter your password").min(6),
 });
-const Login: FC<Props> = ({ setRoute, setOpen }) => {
+const Login: FC<Props> = ({ setRoute, setOpen, refetch }) => {
   const [show, setShow] = useState(false);
 
   const [login, { data, isSuccess, error, isLoading }] = useLoginMutation();
@@ -42,6 +43,7 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
     if (isSuccess) {
       toast.success("Login successful");
       setOpen(false);
+      refetch();
       redirect("/profile");
     }
     if (error) {
