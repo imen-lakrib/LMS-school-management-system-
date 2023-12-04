@@ -159,7 +159,7 @@ const Sidebar = () => {
                   alt="profile-user"
                   width={100}
                   height={100}
-                  src={user.avatar ? user.avatar.url : avatarDefault}
+                  src={user.avatar ? user.avatar.url : "/client/public/assets/download.jpeg"}
                   style={{
                     cursor: "pointer",
                     borderRadius: "50%",

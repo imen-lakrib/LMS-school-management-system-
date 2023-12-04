@@ -160,7 +160,7 @@ const CourseDetails: FC<Props> = ({
                           src={
                             item?.user.avatar
                               ? item?.user.avatar
-                              : "any default image"
+                              : "/client/public/assets/download.jpeg"
                           }
                           alt=""
                           width={50}

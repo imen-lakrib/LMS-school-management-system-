@@ -1,20 +1,24 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import SideBarProfile from "./SideBarProfile";
 import { useLogoutQuery } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
 import ProfileInfo from "./ProfileInfo";
 import ChangePassword from "./ChangePassword";
+import CourseCard from "../Course/CourseCard";
+import { useGetCourseContentforUserQuery } from "@/redux/features/courses/coursesApi";
 
 type Props = {
   user: any;
 };
 
 const Profile: FC<Props> = ({ user }) => {
+  const { data, isLoading } = useGetCourseContentforUserQuery(undefined, {});
   const [scroll, setScroll] = useState(false);
   const [avatar, setAvatar] = useState(null);
   const [active, setActive] = useState(1);
   const [logout, setLogout] = useState(false);
+  const [courses, setCourses] = useState<any>([]);
 
   const {
     /* Destructure the necessary properties */
@@ -42,6 +46,19 @@ const Profile: FC<Props> = ({ user }) => {
       }
     });
   }
+
+  useEffect(() => {
+    if (data) {
+      const filtredCourses = user.courses
+        .map((userCourse: any) =>
+          data.courses.find((course: any) => course._id === userCourse._id)
+        )
+        .filter((course: any) => course !== undefined);
+
+      setCourses(filtredCourses);
+      console.log("courses", courses);
+    }
+  }, [data, courses, user]);
   return (
     <div className="w-[85%] flex mx-auto">
       <div
@@ -60,10 +77,32 @@ const Profile: FC<Props> = ({ user }) => {
       {/* content conditional displaying */}
       <div className="text-center w-full mt-[80px] mb-[80px]">
         {active === 1 && <ProfileInfo user={user} avatar={avatar} />}
-        {active === 2 && <ChangePassword user={user}  />}
+        {active === 2 && <ChangePassword user={user} />}
+
+        {/* /// */}
+
+        {active === 3 && (
+          <div className="w-full pl-7 px-2 800px:px-10 800px:pl-8">
+            <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-2 lg:gap-[25px] xl:grid-cols-3 xl:gap-[35px]">
+              {courses &&
+                courses.map((item: any, index: number) => (
+                  <CourseCard
+                    item={item}
+                    key={index}
+                    user={user}
+                    isProfile={true}
+                  />
+                ))}
+            </div>
+            {courses.lenght === 0 && (
+              <h1 className="text-center text-[18px] font-Poppins">
+                You dont have any purchased courses!
+              </h1>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
 export default Profile;
